@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 const signUp = async (req, res) => {
 
@@ -21,25 +21,23 @@ const signUp = async (req, res) => {
         });
     };
 
+    const hashedPassword = await bcrypt.hash(password, 7);
+
     const user = await User.create({
         email,
-        password: crypto.createHash('sha256').update(password).digest('hex'),
+        password: hashedPassword,
         username,
         bio,
         profilePicture
     });
 
-    const payload = {
-        id: user._id
-    }
-
     const token = jwt.sign(
-        payload,
+        { id: user._id },
         process.env.JWT_SECRET,
         { expiresIn: '1d' }
     );
 
-    res.cookie('jwt_token', token);
+    res.cookie('token', token);
 
     res.status(201).json({
         message: "User registered successfully.",
@@ -53,5 +51,44 @@ const signUp = async (req, res) => {
     });
 };
 
+const signIn = async (req, res) => {
 
-module.exports = { signUp };
+    const { email, username, password } = req.body;
+
+    const user = await User.findOne({
+        $or: [
+            { email },
+            { username }
+        ]
+    });
+
+    if (!user) {
+        return res.status(409).json({
+            message: "Invalid Credentials."
+        });
+    };
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+        return res.status(409).json({
+            message: "Invalid Credentials."
+        });
+    };
+
+    const token = jwt.sign(
+        { id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+    );
+
+    res.cookie('token', token);
+
+    res.status(200).json({
+        message: "User logged in successfully.",
+        token
+    });
+};
+
+
+module.exports = { signUp, signIn };
