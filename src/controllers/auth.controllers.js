@@ -68,9 +68,9 @@ const signIn = async (req, res) => {
         });
     };
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) {
+    if (!isValid) {
         return res.status(409).json({
             message: "Invalid Credentials."
         });
