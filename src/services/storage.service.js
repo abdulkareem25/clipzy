@@ -8,7 +8,8 @@ const uploadImage = async (buffer) => {
 
     const result = await client.files.upload({
         file: buffer.toString('base64'),
-        fileName: "image"
+        fileName: "image",
+        folder: "clipzy"
     });
 
     return result;
