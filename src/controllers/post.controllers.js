@@ -13,12 +13,13 @@ const createPost = async (req, res) => {
         });
     };
 
+    let decoded;
+
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
         return res.status(401).json({
-            message: "Invalid token. Please login again.",
-            error: err.message
+            message: "Invalid token. Please login again."
         });
     };
 
@@ -36,4 +37,30 @@ const createPost = async (req, res) => {
     });
 };
 
-module.exports = { createPost }
+const getPosts = async (req, res) => {
+
+    const { token } = req.cookies;
+
+    let decoded;
+
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return res.status(401).json({
+            message: "Invalid Token.",
+            error: err.message
+        });
+    };
+
+    const user = decoded.id;
+
+    const posts = await Post.find({ user }).populate('user', ['username', 'email']);
+
+    res.status(200).json({
+        message: "Posts retrieved successfully.",
+        posts
+    });
+};
+}
+
+module.exports = { createPost, getPosts };
