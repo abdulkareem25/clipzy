@@ -41,6 +41,12 @@ const getPosts = async (req, res) => {
 
     const { token } = req.cookies;
 
+    if (!token) {
+        return res.status(401).json({
+            message: "Token not found. Please login to get posts."
+        });
+    };
+
     let decoded;
 
     try {
@@ -61,6 +67,51 @@ const getPosts = async (req, res) => {
         posts
     });
 };
+
+const getPost = async (req, res) => {
+    
+    const postId = req.params.id;
+    const { token } = req.cookies;
+
+    if (!token) {
+        return res.status(401).json({
+            message: "Token not found. Please login to see a post."
+        });
+    };
+
+    let decoded;
+
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return res.status(401).json({
+            message: "Invalid Token.",
+            error: err.message
+        });
+    };
+
+    const userId = decoded.id;
+
+    const post = await Post.findById(postId);
+
+    if(!post) {
+        return res.status(404).json({
+            message: "Post Not Found."
+        });
+    };
+
+    const isValid = post.user.toString() === userId;
+
+    if(!isValid) {
+        return res.status(403).json({
+            message: "You are not authorized to view this post."
+        });
+    };
+
+    res.status(200).json({
+        message: "Post retrieved successfully.",
+        post
+    });
 }
 
-module.exports = { createPost, getPosts };
+module.exports = { createPost, getPosts, getPost };
