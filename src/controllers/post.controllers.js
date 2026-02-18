@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const uploadImage = require("../services/storage.service");
 const Post = require("../models/post.model");
 
@@ -34,15 +33,9 @@ const getPosts = async (req, res) => {
 
 const getPost = async (req, res) => {
 
-    const postId = req.params.id;
+    const { postId } = req.params;
 
     const userId = req.user.id;
-
-    if (!mongoose.isValidObjectId(postId)) {
-        return res.status(400).json({
-            message: "Invalid Post ID."
-        });
-    };
 
     const post = await Post.findById(postId);
 
