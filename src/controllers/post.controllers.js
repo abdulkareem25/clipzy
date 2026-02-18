@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const uploadImage = require("../services/storage.service");
 const Post = require("../models/post.model");
 
@@ -32,14 +33,20 @@ const getPosts = async (req, res) => {
 };
 
 const getPost = async (req, res) => {
-    
+
     const postId = req.params.id;
 
     const userId = req.user.id;
 
+    if (!mongoose.isValidObjectId(postId)) {
+        return res.status(400).json({
+            message: "Invalid Post ID."
+        });
+    };
+
     const post = await Post.findById(postId);
 
-    if(!post) {
+    if (!post) {
         return res.status(404).json({
             message: "Post Not Found."
         });
@@ -47,7 +54,7 @@ const getPost = async (req, res) => {
 
     const isValid = post.user.toString() === userId;
 
-    if(!isValid) {
+    if (!isValid) {
         return res.status(403).json({
             message: "You are not authorized to view this post."
         });
