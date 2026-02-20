@@ -1,5 +1,6 @@
 const uploadImage = require("../services/storage.service");
 const Post = require("../models/post.model");
+const Like = require("../models/like.model");
 
 const createPost = async (req, res) => {
     const { buffer } = req.file;
@@ -60,4 +61,38 @@ const getPost = async (req, res) => {
     });
 };
 
-module.exports = { createPost, getPosts, getPost };
+const likePost = async (req, res) => {
+    
+    const { postId } = req.params;
+    const { userId } = req.user;
+
+    const isPostExists = await Post.findById(postId);
+
+    if(!isPostExists) {
+        return res.status(404).json({
+            message: "Post Not Found."
+        });
+    };
+
+    const isLiked = await Like.findOne({
+        postId,
+        userId
+    });
+
+    if(isLiked) {
+        return res.status(400).json({
+            message: "You have already liked this post."
+        });
+    };
+
+    await Like.create({
+        postId,
+        userId
+    });
+
+    return res.status(201).json({
+        message: "Post liked successfully."
+    });
+};
+
+module.exports = { createPost, getPosts, getPost, likePost };
