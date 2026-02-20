@@ -2,8 +2,9 @@ const Follow = require("../models/follow.model");
 const User = require("../models/user.model");
 
 async function followUser(req, res) {
-    const followerId = req.user.id;
+    
     const { followeeId } = req.params;
+    const followerId = req.user.userId;
 
     const isfolloweeExist = await User.findById(followeeId);
 
@@ -39,6 +40,13 @@ async function followUser(req, res) {
         message: "User followed successfully.",
         followRecord
     });
+};
+
+async function unFollowUser(req, res) {
+  
+    const { followeeId } = req.params;
+    const followerId = req.user.userId;
+
 };
 
 module.exports = { followUser };

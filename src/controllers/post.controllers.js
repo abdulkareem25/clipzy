@@ -4,13 +4,14 @@ const Post = require("../models/post.model");
 const createPost = async (req, res) => {
     const { buffer } = req.file;
     const { caption } = req.body;
+    const { userId } = req.user;
 
     const result = await uploadImage(buffer);
 
     const post = await Post.create({
         imageUrl: result.url,
         caption,
-        user: req.user.id
+        userId
     });
 
     res.status(201).json({
@@ -21,9 +22,9 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
 
-    const user = req.user.id;
+    const { userId } = req.user;
 
-    const posts = await Post.find({ user }).populate('user', ['username', 'email']);
+    const posts = await Post.find({ userId }).populate('userId', ['username', 'email']);
 
     res.status(200).json({
         message: "Posts retrieved successfully.",
@@ -35,7 +36,7 @@ const getPost = async (req, res) => {
 
     const { postId } = req.params;
 
-    const userId = req.user.id;
+    const { userId } = req.user;
 
     const post = await Post.findById(postId);
 
@@ -45,7 +46,7 @@ const getPost = async (req, res) => {
         });
     };
 
-    const isValid = post.user.toString() === userId;
+    const isValid = post.userId.toString() === userId;
 
     if (!isValid) {
         return res.status(403).json({
