@@ -107,4 +107,31 @@ async function getFollowers(req, res) {
     });
 };
 
-module.exports = { followUser, unFollowUser, getFollowers };
+async function getFollowing(req, res) {
+
+    const { followerId } = req.params;
+
+    const user = await User.findById(followerId);
+
+    if (!user) {
+        return res.status(400).json({
+            message: "User does not exist."
+        });
+    };
+
+    const following = await Follow.find({ followerId, status: 'accepted' })
+        .populate("followeeId", "name profilePicture");
+
+    if (following.length === 0) {
+        return res.status(200).json({
+            message: "This user is not following anyone."
+        });
+    };
+
+    res.status(200).json({
+        message: "Following retrieved successfully.",
+        following
+    });
+};
+
+module.exports = { followUser, unFollowUser, getFollowers, getFollowing };
