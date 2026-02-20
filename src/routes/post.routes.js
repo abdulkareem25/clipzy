@@ -1,6 +1,6 @@
 const multer = require('multer');
 const { Router } = require('express');
-const { createPost, getPosts, getPost, likePost } = require('../controllers/post.controllers');
+const { createPost, getPosts, getPost, likePost, disLikePost } = require('../controllers/post.controllers');
 const identifyUser = require('../middlewares/auth.middleware');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
 
@@ -15,5 +15,7 @@ router.get('/get-posts', identifyUser, getPosts);
 router.get('/details/:postId', validateObjectId('postId'), identifyUser, getPost);
 
 router.post('/like/:postId', validateObjectId('postId'), identifyUser, likePost);
+
+router.post('/dislike/:postId', validateObjectId('postId'), identifyUser, disLikePost);
 
 module.exports = router;

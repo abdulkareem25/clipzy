@@ -36,7 +36,6 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
 
     const { postId } = req.params;
-
     const { userId } = req.user;
 
     const post = await Post.findById(postId);
@@ -62,13 +61,13 @@ const getPost = async (req, res) => {
 };
 
 const likePost = async (req, res) => {
-    
+
     const { postId } = req.params;
     const { userId } = req.user;
 
-    const isPostExists = await Post.findById(postId);
+    const post = await Post.findById(postId);
 
-    if(!isPostExists) {
+    if (!post) {
         return res.status(404).json({
             message: "Post Not Found."
         });
@@ -79,7 +78,7 @@ const likePost = async (req, res) => {
         userId
     });
 
-    if(isLiked) {
+    if (isLiked) {
         return res.status(400).json({
             message: "You have already liked this post."
         });
@@ -95,4 +94,38 @@ const likePost = async (req, res) => {
     });
 };
 
-module.exports = { createPost, getPosts, getPost, likePost };
+const disLikePost = async (req, res) => {
+
+    const { postId } = req.params;
+    const { userId } = req.user;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        return res.status(404).json({
+            message: "Post Not Found."
+        });
+    };
+
+    const isLiked = await Like.findOne({
+        postId,
+        userId
+    });
+
+    if(!isLiked) {
+        return res.status(400).json({
+            message: "You have not liked this post."
+        });
+    };
+
+    await Like.findOneAndDelete({
+        postId,
+        userId
+    });
+
+    return res.status(200).json({
+        message: "Post disliked successfully."
+    });
+};
+
+module.exports = { createPost, getPosts, getPost, likePost, disLikePost };
