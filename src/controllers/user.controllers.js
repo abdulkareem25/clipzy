@@ -8,7 +8,7 @@ async function followUser(req, res) {
 
     const isfolloweeExist = await User.findById(followeeId);
 
-    if(!isfolloweeExist) {
+    if (!isfolloweeExist) {
         return res.status(400).json({
             message: "User you are trying to follow does not exist."
         });
@@ -33,23 +33,24 @@ async function followUser(req, res) {
 
     const followRecord = await Follow.create({
         followerId,
-        followeeId
+        followeeId,
+        status: 'pending'
     });
 
     res.status(201).json({
-        message: "User followed successfully.",
+        message: "Follow request sent.",
         followRecord
     });
 };
 
 async function unFollowUser(req, res) {
-  
+
     const { followeeId } = req.params;
     const followerId = req.user.userId;
 
     const isFolloweeExist = await User.findById(followeeId);
 
-    if(!isFolloweeExist) {
+    if (!isFolloweeExist) {
         return res.status(400).json({
             message: "User you are trying to unfollow does not exist."
         });
@@ -61,12 +62,13 @@ async function unFollowUser(req, res) {
         });
     };
 
-    const isFollowing = await Follow.findOne({ 
+    const isFollowing = await Follow.findOne({
         followeeId,
-        followerId
+        followerId,
+        status: 'accepted'
     });
 
-    if(isFollowing) {
+    if (isFollowing) {
         await Follow.findOneAndDelete({
             followeeId,
             followerId
@@ -78,4 +80,31 @@ async function unFollowUser(req, res) {
     });
 };
 
-module.exports = { followUser, unFollowUser };
+async function getFollowers(req, res) {
+
+    const { followeeId } = req.params;
+
+    const user = await User.findById(followeeId);
+
+    if (!user) {
+        return res.status(400).json({
+            message: "User does not exist."
+        });
+    };
+
+    const followers = await Follow.find({ followeeId, status: 'accepted' })
+        .populate("followerId", "name profilePicture");
+
+    if (followers.length === 0) {
+        return res.status(200).json({
+            message: "This user has no followers."
+        });
+    };
+
+    res.status(200).json({
+        message: "Followers retrieved successfully.",
+        followers
+    });
+};
+
+module.exports = { followUser, unFollowUser, getFollowers };
