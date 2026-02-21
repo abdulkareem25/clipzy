@@ -56,7 +56,7 @@ async function followRequest(req, res) {
     });
 };
 
-async function pendingRequests(req, res) {
+async function getPendingRequests(req, res) {
     const { userId } = req.user;
 
     const requests = await Follow.find({ followeeId: userId, status: "pending" })
@@ -71,6 +71,36 @@ async function pendingRequests(req, res) {
     res.status(200).json({
         message: "Pending follow requests retrieved successfully.",
         requests
+    });
+
+};
+
+async function acceptFollowRequest(req, res) {
+
+    const { userId } = req.user;
+    const { followerId } = req.params;
+
+    const follower = await User.findById(followerId);
+
+    if (!follower) {
+        return res.status(400).json({
+            message: "User does not exist."
+        });
+    };
+
+    const request = await Follow.findOne({ followeeId: userId, followerId, status: "pending" });
+
+    if(!request) {
+        return res.status(400).json({
+            message: "No pending follow request from this user."
+        });
+    };
+
+    request.status = "accepted";
+    await request.save();
+
+    res.status(200).json({
+        message: "Follow request accepted."
     });
 
 };
@@ -168,7 +198,8 @@ async function getFollowing(req, res) {
 
 module.exports = {
     followRequest,
-    pendingRequests,
+    getPendingRequests,
+    acceptFollowRequest,
     unFollowUser,
     getFollowers,
     getFollowing
