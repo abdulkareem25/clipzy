@@ -1,15 +1,21 @@
 const express = require('express');
 const identifyUser = require('../middlewares/auth.middleware');
-const { followUser, unFollowUser, getFollowers, getFollowing } = require('../controllers/user.controllers');
+const { followRequest, unFollowUser, getFollowers, getFollowing, pendingRequests } = require('../controllers/user.controllers');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
 
 const router = express.Router();
 
 router.post(
-    '/follow/:followeeId',
+    '/follow/request/:followeeId',
     validateObjectId('followeeId'),
     identifyUser,
-    followUser
+    followRequest
+);
+
+router.get(
+    '/follow/pending/',
+    identifyUser,
+    pendingRequests
 );
 
 router.post(

@@ -1,7 +1,7 @@
 const Follow = require("../models/follow.model");
 const User = require("../models/user.model");
 
-async function followUser(req, res) {
+async function followRequest(req, res) {
 
     const { followeeId } = req.params;
     const followerId = req.user.userId;
@@ -20,9 +20,22 @@ async function followUser(req, res) {
         });
     };
 
+    const isPending = await Follow.findOne({
+        followerId,
+        followeeId,
+        status: 'pending'
+    });
+
+    if (isPending) {
+        return res.status(400).json({
+            message: "Follow request already sent and is pending approval."
+        });
+    };
+
     const isFollowing = await Follow.findOne({
         followerId,
-        followeeId
+        followeeId,
+        status: 'accepted'
     });
 
     if (isFollowing) {
@@ -41,6 +54,25 @@ async function followUser(req, res) {
         message: "Follow request sent.",
         followRecord
     });
+};
+
+async function pendingRequests(req, res) {
+    const { userId } = req.user;
+
+    const requests = await Follow.find({ followeeId: userId, status: "pending" })
+        .populate("followerId", "name profilePicture");
+
+    if (!requests) {
+        return res.status(200).json({
+            message: "No pending follow requests."
+        });
+    };
+
+    res.status(200).json({
+        message: "Pending follow requests retrieved successfully.",
+        requests
+    });
+
 };
 
 async function unFollowUser(req, res) {
@@ -134,4 +166,10 @@ async function getFollowing(req, res) {
     });
 };
 
-module.exports = { followUser, unFollowUser, getFollowers, getFollowing };
+module.exports = {
+    followRequest,
+    pendingRequests,
+    unFollowUser,
+    getFollowers,
+    getFollowing
+};
