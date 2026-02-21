@@ -90,7 +90,7 @@ async function acceptFollowRequest(req, res) {
 
     const request = await Follow.findOne({ followeeId: userId, followerId, status: "pending" });
 
-    if(!request) {
+    if (!request) {
         return res.status(400).json({
             message: "No pending follow request from this user."
         });
@@ -103,6 +103,34 @@ async function acceptFollowRequest(req, res) {
         message: "Follow request accepted."
     });
 
+};
+
+async function rejectFollowRequest(req, res) {
+
+    const { userId } = req.user;
+    const { followerId } = req.params;
+
+    const follower = await User.findById(followerId);
+
+    if(!follower) {
+        return res.status(400).json({
+            message: "User does not exist."
+        });
+    };
+
+    const request = await Follow.findOne({ followeeId: userId, followerId, status: "pending" });
+
+    if (!request) {
+        return res.status(400).json({
+            message: "No pending follow request from this user."
+        });
+    };
+
+    await Follow.findByIdAndDelete(request._id);
+
+    res.status(200).json({
+        message: "Follow request rejected."
+    });
 };
 
 async function unFollowUser(req, res) {
@@ -124,18 +152,19 @@ async function unFollowUser(req, res) {
         });
     };
 
-    const isFollowing = await Follow.findOne({
+    const request = await Follow.findOne({
         followeeId,
         followerId,
         status: 'accepted'
     });
 
-    if (isFollowing) {
-        await Follow.findOneAndDelete({
-            followeeId,
-            followerId
+    if (!request) {
+        return res.status(400).json({
+            message: "You are not following this user."
         });
     };
+
+    await Follow.findByIdAndDelete(request._id);
 
     res.status(200).json({
         message: "User unfollowed successfully."
@@ -200,6 +229,7 @@ module.exports = {
     followRequest,
     getPendingRequests,
     acceptFollowRequest,
+    rejectFollowRequest,
     unFollowUser,
     getFollowers,
     getFollowing
