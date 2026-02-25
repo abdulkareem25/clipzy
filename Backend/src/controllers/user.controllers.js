@@ -60,7 +60,7 @@ async function getPendingRequests(req, res) {
     const { userId } = req.user;
 
     const requests = await Follow.find({ followeeId: userId, status: "pending" })
-        .populate("followerId", "name profilePicture");
+        .populate("followerId", "fullName profilePicture");
 
     if (!requests) {
         return res.status(200).json({
@@ -112,7 +112,7 @@ async function rejectFollowRequest(req, res) {
 
     const follower = await User.findById(followerId);
 
-    if(!follower) {
+    if (!follower) {
         return res.status(400).json({
             message: "User does not exist."
         });
@@ -184,7 +184,7 @@ async function getFollowers(req, res) {
     };
 
     const followers = await Follow.find({ followeeId, status: 'accepted' })
-        .populate("followerId", "name profilePicture");
+        .populate("followerId", "fullName profilePicture");
 
     if (followers.length === 0) {
         return res.status(200).json({
@@ -211,7 +211,7 @@ async function getFollowing(req, res) {
     };
 
     const following = await Follow.find({ followerId, status: 'accepted' })
-        .populate("followeeId", "name profilePicture");
+        .populate("followeeId", "fullName profilePicture");
 
     if (following.length === 0) {
         return res.status(200).json({

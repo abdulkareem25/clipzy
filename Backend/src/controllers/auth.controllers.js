@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const signUp = async (req, res) => {
 
-    const { name, email, password, username, bio, profilePicture } = req.body;
+    const { fullName, email, password, username, bio, profilePicture } = req.body;
 
     const isExists = await User.findOne({
         $or: [
@@ -24,7 +24,7 @@ const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 7);
 
     const user = await User.create({
-        name,
+        fullName,
         email,
         password: hashedPassword,
         username,
@@ -43,7 +43,7 @@ const signUp = async (req, res) => {
     res.status(201).json({
         message: "User registered successfully.",
         user: {
-            name: user.name,
+            fullName: user.fullName,
             email: user.email,
             username: user.username,
             bio: user.bio,
