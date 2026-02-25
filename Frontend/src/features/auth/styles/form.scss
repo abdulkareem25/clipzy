@@ -130,6 +130,41 @@ form {
             }
         }
 
+        .password-wrapper {
+            position: relative;
+
+            .password-input {
+                width: 100%;
+            }
+
+            .eye-icon {
+                position: absolute;
+                top: 50%;
+                right: 1rem;
+                height: 25px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                fill: rgba(255, 255, 255, 0.6);
+                transition: all 0.2s ease;
+                opacity: 0;
+                pointer-events: none;
+
+                &:hover {
+                    fill: rgba(255, 255, 255, 0.9);
+                }
+
+                &.show {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+
+                &.hide {
+                    opacity: 0;
+                    pointer-events: none;
+                }
+            }
+        }
+
         textarea {
             resize: vertical;
             min-height: 100px;
