@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import '../styles/auth.scss'
 import '../styles/form.scss'
+import axios from 'axios';
 
 const SignUp = () => {
     const [fullName, setFullName] = useState("");
@@ -11,10 +12,33 @@ const SignUp = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [bio, setBio] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
+        await axios.post('http://localhost:3000/api/auth/sign-up', {
+            fullName,
+            username,
+            email,
+            password,
+            bio
+        }, {
+            withCredentials: true
+        })
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
 
+
+        setFullName("");
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setBio("");
+        setShowPassword(false);
     }
 
     return (
