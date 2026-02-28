@@ -11,22 +11,7 @@ const SignIn = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        await axios.post('http://localhost:3000/api/auth/sign-in', {
-            email,
-            password
-        }, {
-            withCredentials: true
-        })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((err) => {
-                console.error(err);
-            })
 
-            setEmail("");
-            setPassword("");
-            setShowPassword(false);
     }
 
     return (

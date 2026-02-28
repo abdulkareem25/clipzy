@@ -15,30 +15,7 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        await axios.post('http://localhost:3000/api/auth/sign-up', {
-            fullName,
-            username,
-            email,
-            password,
-            bio
-        }, {
-            withCredentials: true
-        })
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-
-
-        setFullName("");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setBio("");
-        setShowPassword(false);
+        
     }
 
     return (
