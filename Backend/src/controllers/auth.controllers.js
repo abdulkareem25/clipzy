@@ -99,5 +99,28 @@ const signOut = async (req, res) => {
     });
 };
 
+const getUser = async (req, res) => {
 
-module.exports = { signUp, signIn, signOut };
+    const { userId } = req.user;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return res.status(404).json({
+            message: "User not found."
+        });
+    }
+
+    res.status(200).json({
+        user: {
+            fullName: user.fullName,
+            email: user.email,
+            username: user.username,
+            bio: user.bio,
+            profilePicture: user.profilePicture
+        }
+    });
+};
+
+
+module.exports = { signUp, signIn, signOut, getUser };
