@@ -37,3 +37,22 @@ export const signIn = async (email, password) => {
         throw error;
     }
 };
+
+export const signOut = async () => {
+    try {
+        await api.post('/sign-out');
+    } catch (error) {
+        console.error("Error signing out:", error);
+        throw error;
+    };
+};
+
+export const getUser = async () => {
+    try {
+        const response = await api.get('/get-user');
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        throw error;
+    };
+};
