@@ -4,13 +4,10 @@ import '../styles/form.scss'
 import axios from 'axios';
 
 const SignUp = () => {
-    const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [bio, setBio] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,16 +24,6 @@ const SignUp = () => {
                         onSubmit={handleSubmit}
                         className="signup-form">
                         <div className="form-grid">
-                            <div className='form-group'>
-                                <label>Full Name</label>
-                                <input
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    type="text"
-                                    className='form-control'
-                                    placeholder='John Doe'
-                                />
-                            </div>
                             <div className='form-group'>
                                 <label>Username</label>
                                 <input
@@ -85,26 +72,7 @@ const SignUp = () => {
                                     </svg>
                                 </div>
                             </div>
-                            <div className='form-group'>
-                                <label>Confirm Password</label>
-                                <input
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    type="password"
-                                    className='form-control'
-                                    placeholder='Confirm password'
-                                />
-                            </div>
-                            <div className="form-group form-full">
-                                <label>Bio</label>
-                                <textarea
-                                    value={bio}
-                                    onChange={(e) => setBio(e.target.value)}
-                                    className='form-control'
-                                    placeholder='Tell us about yourself'
-                                    rows="3"
-                                ></textarea>
-                            </div>
+
                         </div>
                         <button
                             type='submit'
