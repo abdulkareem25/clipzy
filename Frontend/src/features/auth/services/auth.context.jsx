@@ -8,7 +8,9 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const handleSignUp = async () => {
+
+    const handleSignUp = async (username, email, password) => {
+
         setLoading(true);
         try {
             const response = await signUp(username, email, password);
@@ -20,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         };
     };
 
-    const handleSignIn = async () => {
+    const handleSignIn = async (email, password) => {
         setLoading(true);
         try {
             const response = await signIn(email, password);
@@ -51,7 +53,7 @@ export const AuthProvider = ({ children }) => {
             setUser(response.user);
         } catch (error) {
             console.error("fetchUser error:", error);
-        } finally {     
+        } finally {
             setLoading(false);
         };
     };
@@ -59,8 +61,8 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user,
-            loading, 
-            handleSignUp, 
+            loading,
+            handleSignUp,
             handleSignIn,
             handleSignOut,
             fetchUser

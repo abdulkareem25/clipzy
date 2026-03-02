@@ -1,17 +1,24 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/auth.scss';
 import '../styles/form.scss';
+import { useAuth } from '../hooks/useAuth';
 
 const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const { handleSignIn } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
+        handleSignIn(email, password)
+            .then(() => {
+                navigate('/');
+            })
     }
 
     return (
