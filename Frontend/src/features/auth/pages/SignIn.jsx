@@ -9,7 +9,7 @@ const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const { handleSignIn } = useAuth();
+    const { handleSignIn, loading } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -20,6 +20,18 @@ const SignIn = () => {
                 navigate('/');
             })
     }
+
+    if (loading) {
+        return (
+            <div className='auth-wrapper'>
+                <div className="auth-container">
+                    <div className="form-content">
+                        <h1>Loading...</h1>
+                    </div>
+                </div>
+            </div>
+        )
+    };
 
     return (
         <div className='auth-wrapper'>
