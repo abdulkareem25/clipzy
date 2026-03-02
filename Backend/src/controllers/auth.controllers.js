@@ -48,8 +48,7 @@ const signUp = async (req, res) => {
             username: user.username,
             bio: user.bio,
             profilePicture: user.profilePicture
-        },
-        token
+        }
     });
 };
 
@@ -88,7 +87,13 @@ const signIn = async (req, res) => {
 
     res.status(200).json({
         message: "User logged in successfully.",
-        token
+        user: {
+            fullName: user.fullName,
+            email: user.email,
+            username: user.username,
+            bio: user.bio,
+            profilePicture: user.profilePicture
+        }
     });
 };
 
