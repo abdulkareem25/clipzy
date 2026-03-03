@@ -1,13 +1,35 @@
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import '../styles/main.scss'
 import '../styles/form.scss'
+import { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 const SignIn = () => {
 
-  const handleSubmit = (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const { user, loading, handleSignIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    await handleSignIn(email, password);
+
+    console.log(user);
+
+    navigate('/');
 
   };
+
+  if(loading) return (
+    <main>
+      <div className="form-container">
+        <h2>Loading...</h2>
+      </div>
+    </main>
+  );
 
   return (
     <main>
@@ -16,13 +38,33 @@ const SignIn = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <input
+              value={email}
+              type="email"
+              id="email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <div className="password-group">
-              <input type="password" id="password" name="password" required />
-              <button type="button" className="toggle-password">Show</button>
+              <input
+                value={password}
+                type={showPassword ? "type" : "password"}
+                id="password"
+                name="password"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
             </div>
           </div>
           <button className="primary-btn" type="submit">Sign In</button>
