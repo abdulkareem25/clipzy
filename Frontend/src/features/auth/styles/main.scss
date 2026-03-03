@@ -1,0 +1,73 @@
+@use '../../shared/styles/variables' as *;
+
+@mixin flex-col($gap: 0) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: $gap;
+}
+
+main {
+  height: 100vh;
+  @include flex-col(1rem);
+  padding: 2rem;
+
+  .form-container {
+    background-color: $surface-base;
+    padding: $sp-2xl;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    box-shadow: $card-shadow-lg;
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    background: rgba(20, 27, 38, 0.8);
+
+    h2 {
+      font-size: 2rem;
+      color: $text-primary;
+      font-family: cursive;
+      text-decoration: underline;
+      text-decoration-color: $primary-base;
+      text-underline-offset: 4px;
+      margin-bottom: $sp-xl;
+      text-align: center;
+    }
+
+    p {
+      color: $text-secondary;
+      margin-top: $sp-xl;
+      text-align: center;
+      font-size: $font-size-sm;
+      line-height: $line-height-relaxed;
+
+      .link {
+        color: $primary-base;
+        text-decoration: none;
+        font-weight: $font-weight-semibold;
+        transition: all $transition-base;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: $primary-base;
+          transition: width $transition-base;
+        }
+
+        &:hover {
+          color: $primary-hover;
+
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

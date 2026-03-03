@@ -1,0 +1,46 @@
+@use 'variables' as *;
+@use 'buttons';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  font-family: $font-family-base;
+  background-color: $bg-primary;
+  color: $text-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: $primary-base;
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $surface-base;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-light;
+  border-radius: $radius-full;
+
+  &:hover {
+    background: $primary-base;
+  }
+}

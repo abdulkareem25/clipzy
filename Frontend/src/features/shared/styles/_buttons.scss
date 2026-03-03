@@ -1,0 +1,42 @@
+@use 'variables' as *;
+
+button {
+  color: $text-primary;
+  border: none;
+  padding: $sp-md $sp-lg;
+  border-radius: $radius-md;
+  cursor: pointer;
+  font-size: $font-size-base;
+  transition: all $transition-base;
+  font-weight: $font-weight-medium;
+  overflow: hidden;
+
+  &:disabled {
+    background-color: $text-disabled;
+    color: $text-muted;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  &.primary-btn {
+    background: $btn-primary-bg;
+    color: $btn-primary-text;
+    box-shadow: $btn-primary-shadow;
+    position: relative;
+    z-index: 1;
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 8px 20px rgba(61, 138, 255, 0.4);
+      transform: translateY(-3px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(-1px) scale(0.98);
+      box-shadow: 0 4px 12px rgba(61, 138, 255, 0.2);
+    }
+  }
+}

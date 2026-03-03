@@ -1,0 +1,205 @@
+// =====================================================
+// 🎨 MODERN AESTHETIC COLOR SYSTEM
+// =====================================================
+
+// --- NEUTRAL PALETTE (Premium Dark Theme) ---
+$bg-primary: #080e1a; // Ultra-deep navy - refined backdrop
+$bg-secondary: #0b1220; // Deep secondary background
+$surface-base: #141b26; // Primary cards - sophisticated depth
+$surface-elevated: #1a2333; // Elevated surfaces - modal/dropdown
+$surface-overlay: #0f171d; // Subtle overlay - glassmorphism effect
+$surface-hover: #1d2535; // Hover state - smooth interaction
+$surface-active: #242f3f; // Active/selected - clear feedback
+$border-light: #2a3747; // Primary subtle border
+$border-subtle: #1a2333; // Ultra-subtle dividers
+$divider: rgba(42, 55, 71, 0.3);
+
+// --- TEXT HIERARCHY (Refined) ---
+$text-primary: #f8fafc; // Headlines - crisp white
+$text-secondary: #cbd5e1; // Body text - readable
+$text-tertiary: #94a3b8; // Captions - de-emphasized
+$text-muted: #64748b; // Disabled/placeholder
+$text-disabled: #475569; // Fully disabled state
+
+// --- PREMIUM BRAND ACCENT (Blue gradient) ---
+$primary-base: #3d8aff; // Refined vibrant blue
+$primary-hover: #2970ed; // Deeper hover
+$primary-active: #1e5fc8; // Active pressed state
+$primary-soft: #2851a3; // Background tint
+$primary-lighter: #60a5fa; // Light accent
+$primary-lightest: #dbeafe; // Ultra-light background
+
+// --- STATE COLORS (Semantic) ---
+$success-base: #10b981; // Confirmations
+$success-soft: rgba(16, 185, 129, 0.15);
+$warning-base: #f59e0b; // Warnings
+$warning-soft: rgba(245, 158, 11, 0.15);
+$error-base: #f43f5e; // Errors (more vibrant)
+$error-soft: rgba(244, 63, 94, 0.15);
+$info-base: #06b6d4; // Information
+$info-soft: rgba(6, 182, 212, 0.15);
+
+// --- PREMIUM ENGAGEMENT COLORS (Clipzy) ---
+$like-base: #ff385c; // Premium red for hearts
+$like-hover: #e82e49; // Darker hover
+$like-light: rgba(255, 56, 92, 0.1);
+$like-glow: rgba(255, 56, 92, 0.25);
+
+$follow-base: #9f5aed; // Sophisticated purple
+$follow-hover: #8b47d9; // Deeper purple
+$follow-pending: #fbbf24; // Amber for pending
+$follow-light: rgba(159, 90, 237, 0.1);
+
+$share-base: #14b8a6; // Teal for share
+$share-hover: #0d9488; // Darker teal
+$share-light: rgba(20, 184, 166, 0.1);
+
+$comment-base: #64b5f6; // Light blue for comments
+$comment-hover: #42a5f5; // Slightly deeper
+$comment-light: rgba(100, 181, 246, 0.1);
+
+// --- AESTHETIC GRADIENTS ---
+$gradient-primary: linear-gradient(135deg, #3d8aff 0%, #2970ed 50%, #1e5fc8 100%);
+$gradient-primary-hover: linear-gradient(135deg, #2970ed 0%, #1e5fc8 100%);
+
+$gradient-like: linear-gradient(135deg, #ff385c 0%, #e82e49 100%);
+$gradient-like-glow: radial-gradient(circle, rgba(255, 56, 92, 0.3) 0%, rgba(255, 56, 92, 0) 70%);
+
+$gradient-follow: linear-gradient(135deg, #9f5aed 0%, #8b47d9 100%);
+$gradient-share: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+
+$gradient-overlay-dark: linear-gradient(180deg, rgba(8, 14, 26, 0.85) 0%, rgba(8, 14, 26, 0.95) 100%);
+$gradient-card-hover: linear-gradient(135deg, rgba(61, 138, 255, 0.08) 0%, transparent 100%);
+
+// --- ACCENT PALETTE (For highlights & badges) ---
+$accent-cyan: #22d3ee;
+$accent-emerald: #34d399;
+$accent-amber: #fbbf24;
+$accent-pink: #f472b6;
+
+// =====================================================
+// 🚀 COMPONENT-SPECIFIC TOKENS (Refined)
+// =====================================================
+
+// Navigation
+$nav-bg: $surface-base;
+$nav-border: $border-light;
+$nav-text: $text-secondary;
+$nav-text-active: $primary-base;
+$nav-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+// Cards & Posts
+$card-bg: $surface-base;
+$card-border: $border-light;
+$card-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+$card-shadow-md: 0 8px 16px rgba(0, 0, 0, 0.25);
+$card-shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.3);
+$card-shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.35);
+$card-hover-shadow: 0 12px 24px rgba(61, 138, 255, 0.15);
+
+// Buttons (Premium)
+$btn-primary-bg: $gradient-primary;
+$btn-primary-text: white;
+$btn-primary-shadow: 0 4px 12px rgba(61, 138, 255, 0.3);
+$btn-secondary-bg: $surface-elevated;
+$btn-secondary-text: $text-primary;
+$btn-secondary-border: $border-light;
+$btn-danger-bg: $error-base;
+$btn-danger-hover: $error-base;
+
+// Forms & Inputs
+$input-bg: $surface-base;
+$input-border: $border-light;
+$input-border-hover: $border-light;
+$input-border-focus: $primary-base;
+$input-text: $text-primary;
+$input-placeholder: $text-muted;
+$input-shadow-focus: 0 0 0 4px rgba(61, 138, 255, 0.1);
+
+// Posts Feed
+$post-bg: $surface-base;
+$post-border: $border-light;
+$post-hover-bg: $surface-hover;
+$post-hover-shadow: $card-hover-shadow;
+$post-engagement-bg: rgba(61, 138, 255, 0.08);
+
+// Engagement Buttons
+$engagement-button-hover: rgba(255, 255, 255, 0.08);
+
+// =====================================================
+// ⚡ SPACING SCALE (8px base - Refined)
+// =====================================================
+
+$sp-xs: 4px;
+$sp-sm: 8px;
+$sp-md: 12px;
+$sp-lg: 16px;
+$sp-xl: 24px;
+$sp-2xl: 32px;
+$sp-3xl: 48px;
+$sp-4xl: 64px;
+
+// =====================================================
+// 🎭 TYPOGRAPHY TOKENS (Enhanced)
+// =====================================================
+
+$font-family-base: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+$font-family-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$font-size-xs: 12px;
+$font-size-sm: 13px;
+$font-size-base: 14px;
+$font-size-md: 15px;
+$font-size-lg: 16px;
+$font-size-xl: 18px;
+$font-size-2xl: 20px;
+$font-size-3xl: 24px;
+$font-size-4xl: 32px;
+
+$line-height-tight: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// =====================================================
+// ⏱️ ANIMATION & TRANSITIONS (Micro-interactions)
+// =====================================================
+
+$transition-extra-fast: 100ms cubic-bezier(0.4, 0, 1, 1);
+$transition-fast: 150ms cubic-bezier(0.4, 0, 1, 1);
+$transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slower: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+$easing-in: cubic-bezier(0.4, 0, 1, 1);
+$easing-out: cubic-bezier(0, 0, 0.2, 1);
+$easing-inout: cubic-bezier(0.4, 0, 0.2, 1);
+$easing-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+$easing-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+// =====================================================
+// 🎯 BORDER RADIUS (Premium curves)
+// =====================================================
+
+$radius-none: 0;
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-xl: 20px;
+$radius-2xl: 28px;
+$radius-full: 9999px;
+
+// =====================================================
+// 📏 RESPONSIVE BREAKPOINTS
+// =====================================================
+
+$bp-mobile: 320px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+$bp-wide: 1440px;
+$bp-ultrawide: 1920px;
