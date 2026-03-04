@@ -61,7 +61,7 @@ const SignIn = () => {
                 className="toggle-password"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? 'Hide' : 'Show'}
+                {showPassword ? 'hide' : 'show'}
               </button>
             </div>
           </div>
