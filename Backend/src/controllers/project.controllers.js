@@ -23,3 +23,4 @@ async function createProject(req, res) {
   });
 };
 
+module.exports = { createProject };

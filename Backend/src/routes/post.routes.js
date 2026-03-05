@@ -8,7 +8,7 @@ const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/create-post', upload.single('image'), identifyUser, createPost);
+router.post('/create', upload.single('image'), identifyUser, createPost);
 
 router.get('/get-posts', identifyUser, getPosts);
 

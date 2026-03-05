@@ -5,6 +5,7 @@ const cors = require('cors');
 
 // require routers
 const authRouter = require('./routes/auth.routes');
+const projectRouter = require('./routes/project.routes');
 const postRouter = require('./routes/post.routes');
 const UserRouter = require('./routes/user.routes');
 
@@ -20,6 +21,7 @@ app.use(cors({
 
 // use routers
 app.use('/api/auth', authRouter);
+app.use('/api/projects', projectRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/users', UserRouter);
 
