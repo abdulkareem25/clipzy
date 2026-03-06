@@ -43,4 +43,21 @@ async function getProjects(req, res) {
   });
 };
 
-module.exports = { createProject, getProjects };
+async function getProjectById(req, res) {
+  const { projectId } = req.params;
+  const project = await Project.findById(projectId)
+    .populate('userId', 'fullName email');
+
+  if (!project) {
+    return res.status(404).json({
+      message: "Project not found."
+    });
+  };
+
+  res.status(200).json({
+    message: "Project retrieved successfully.",
+    project
+  });
+};
+
+module.exports = { createProject, getProjects, getProjectById };
