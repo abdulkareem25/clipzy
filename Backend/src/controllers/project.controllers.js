@@ -43,7 +43,7 @@ async function getProjects(req, res) {
   });
 };
 
-async function getProjectById(req, res) {
+async function getProject(req, res) {
   const { projectId } = req.params;
   const project = await Project.findById(projectId)
     .populate('userId', 'fullName email');
@@ -60,4 +60,47 @@ async function getProjectById(req, res) {
   });
 };
 
-module.exports = { createProject, getProjects, getProjectById };
+async function updateProject(req, res) {
+  const { projectId } = req.params;
+  const { description } = req.body;
+
+  const project = await Project.findByIdAndUpdate(
+    projectId,
+    { description },
+    { new: true }
+  );
+
+  if (!project) {
+    return res.status(404).json({
+      message: "Project not found or you don't have permission to update it."
+    });
+  };
+
+  res.status(200).json({
+    message: "Project updated successfully.",
+    project
+  });
+};
+
+async function deleteProject(req, res) {
+  const { projectId } = req.params;
+  const project = await Project.findByIdAndDelete(projectId);
+
+  if (!project) {
+    return res.status(404).json({
+      message: "Project not found or you don't have permission to delete it."
+    });
+  };
+
+  res.status(200).json({
+    message: "Project deleted successfully."
+  });
+};
+
+module.exports = {
+  createProject,
+  getProjects,
+  getProject,
+  updateProject,
+  deleteProject
+};

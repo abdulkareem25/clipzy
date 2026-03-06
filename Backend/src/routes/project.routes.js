@@ -1,6 +1,6 @@
 const express = require('express');
 const identifyUser = require('../middlewares/auth.middleware');
-const { createProject, getProjects, getProjectById } = require('../controllers/project.controllers');
+const { createProject, getProjects, getProject, updateProject, deleteProject } = require('../controllers/project.controllers');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
 
 const router = express.Router();
@@ -9,6 +9,10 @@ router.post('/create-project', identifyUser, createProject);
 
 router.get('/get-projects', identifyUser, getProjects);
 
-router.get('/details/:projectId', identifyUser, validateObjectId('projectId'), getProjectById);
+router.get('/details/:projectId', identifyUser, validateObjectId('projectId'), getProject);
+
+router.patch('/update/:projectId', identifyUser, validateObjectId('projectId'), updateProject);
+
+router.delete('/delete/:projectId', identifyUser, validateObjectId('projectId'), deleteProject);
 
 module.exports = router;
