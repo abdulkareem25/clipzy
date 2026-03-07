@@ -1,5 +1,18 @@
 @use '../../shared/styles/variables' as *;
 
+.loading {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: $text-primary;
+  font-family: cursive;
+  text-decoration: underline;
+  text-decoration-color: $primary-base;
+  text-underline-offset: 4px;
+}
+
 .feed {
   display: flex;
   flex-direction: column;
@@ -51,7 +64,24 @@
       gap: $sp-2xl;
       padding-top: $sp-xl;
 
-      .card {
+      .empty-feed {
+        text-align: center;
+        color: $text-secondary;
+        font-size: $font-size-base;
+        font-weight: $font-weight-medium;
+
+        h2 {
+          margin-bottom: $sp-sm;
+          font-size: 1.5rem;
+        }
+
+        p {
+          margin: 0;
+          font-size: $font-size-sm;
+        }
+      }
+
+      .post {
         background: $surface-base;
         border: 1px solid $border-light;
         border-radius: $radius-lg;
@@ -81,7 +111,7 @@
           background: linear-gradient(135deg, rgba($surface-base, 0.95) 0%, $surface-base 100%);
         }
 
-        .card-header {
+        .post-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
@@ -177,7 +207,7 @@
           }
         }
 
-        .card-content {
+        .post-content {
           display: flex;
           flex-direction: column;
           gap: $sp-md;
@@ -220,7 +250,7 @@
           }
         }
 
-        .card-actions {
+        .post-actions {
           display: flex;
           gap: $sp-lg;
           align-items: center;
@@ -347,11 +377,11 @@
       .feed-container {
         gap: $sp-xl;
 
-        .card {
+        .post {
           padding: $sp-md;
           gap: $sp-md;
 
-          .card-header {
+          .post-header {
             gap: $sp-md;
 
             .user-info {
@@ -374,7 +404,7 @@
             }
           }
 
-          .card-content {
+          .post-content {
             gap: $sp-sm;
 
             .post-image {
@@ -386,7 +416,7 @@
             }
           }
 
-          .card-actions {
+          .post-actions {
             gap: $sp-md;
 
             .action-btn {
