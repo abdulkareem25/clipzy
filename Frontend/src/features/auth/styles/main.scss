@@ -8,7 +8,7 @@
   gap: $gap;
 }
 
-main {
+.main {
   height: 100vh;
   @include flex-col(1rem);
   padding: 2rem;
@@ -23,17 +23,6 @@ main {
     max-width: 400px;
     backdrop-filter: blur(10px);
     background: rgba(20, 27, 38, 0.8);
-
-    h2 {
-      font-size: 2rem;
-      color: $text-primary;
-      font-family: cursive;
-      text-decoration: underline;
-      text-decoration-color: $primary-base;
-      text-underline-offset: 4px;
-      margin-bottom: $sp-xl;
-      text-align: center;
-    }
 
     p {
       color: $text-secondary;

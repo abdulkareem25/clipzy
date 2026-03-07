@@ -22,17 +22,17 @@ const SignUp = () => {
   };
 
   if (loading) return (
-    <main>
+    <main className='main'>
       <div className="form-container">
-        <h2>Loading...</h2>
+        <h2 className="logo">Loading...</h2>
       </div>
     </main>
   );
 
   return (
-    <main>
+    <main className='main'>
       <div className="form-container">
-        <h2>Clipzy</h2>
+        <h2 className="logo">Clipzy</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
