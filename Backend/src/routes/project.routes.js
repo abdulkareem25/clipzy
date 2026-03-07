@@ -1,7 +1,11 @@
 const express = require('express');
 const identifyUser = require('../middlewares/auth.middleware');
-const { createProject, getProjects, getProject, updateProject, deleteProject } = require('../controllers/project.controllers');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
+const { createProject, 
+  getProjects, 
+  getProject, 
+  updateProject, 
+  deleteProject } = require('../controllers/project.controllers');
 
 const router = express.Router();
 

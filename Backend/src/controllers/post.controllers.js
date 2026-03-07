@@ -4,15 +4,16 @@ const Like = require("../models/like.model");
 
 const createPost = async (req, res) => {
     const { buffer } = req.file;
-    const { caption } = req.body;
+    const { caption, projectId } = req.body;
     const { userId } = req.user;
 
-    const result = await uploadImage(buffer);
+    const result = await uploadImage(buffer, userId);
 
     const post = await Post.create({
         imageUrl: result.url,
         caption,
-        userId
+        userId,
+        projectId
     });
 
     res.status(201).json({
@@ -22,10 +23,31 @@ const createPost = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
+    
+    const posts = await Post.find().populate('userId', ['fullName', 'email']);
 
-    const { userId } = req.user;
+    res.status(200).json({
+        message: "Posts retrieved successfully.",
+        posts
+    });
+};
 
-    const posts = await Post.find({ userId }).populate('userId', ['username', 'email']);
+const getPostsByUserId = async (req, res) => {
+
+    const { userId } = req.params;
+
+    const posts = await Post.find({ userId }).populate('userId', ['fullName', 'email']);
+
+    res.status(200).json({
+        message: "Posts retrieved successfully.",
+        posts
+    });
+};
+
+const getPostsByProjectId = async (req, res) => {
+
+    const { projectId } = req.params;
+    const posts = await Post.find({ projectId }).populate('userId', ['fullName', 'email']);
 
     res.status(200).json({
         message: "Posts retrieved successfully.",
@@ -112,7 +134,7 @@ const disLikePost = async (req, res) => {
         userId
     });
 
-    if(!isLiked) {
+    if (!isLiked) {
         return res.status(400).json({
             message: "You have not liked this post."
         });
@@ -128,4 +150,12 @@ const disLikePost = async (req, res) => {
     });
 };
 
-module.exports = { createPost, getPosts, getPost, likePost, disLikePost };
+module.exports = {
+    createPost,
+    getPosts,
+    getPostsByUserId,
+    getPostsByProjectId,
+    getPost,
+    likePost,
+    disLikePost
+};

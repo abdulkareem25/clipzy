@@ -4,12 +4,12 @@ const client = new ImageKit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY
 });
 
-const uploadImage = async (buffer) => {
+const uploadImage = async (buffer, userId) => {
 
     const result = await client.files.upload({
         file: buffer.toString('base64'),
         fileName: "image",
-        folder: "clipzy"
+        folder: `clipzy/${userId}`
     });
 
     return result;

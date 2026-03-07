@@ -1,16 +1,28 @@
 const multer = require('multer');
 const { Router } = require('express');
-const { createPost, getPosts, getPost, likePost, disLikePost } = require('../controllers/post.controllers');
 const identifyUser = require('../middlewares/auth.middleware');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
+const { 
+  createPost, 
+  getPosts,
+  getPostsByUserId, 
+  getPostsByProjectId,
+  getPost, 
+  likePost, 
+  disLikePost 
+} = require('../controllers/post.controllers');
 
 const router = Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/create', upload.single('image'), identifyUser, createPost);
+router.post('/create-post', upload.single('image'), identifyUser, createPost);
 
 router.get('/get-posts', identifyUser, getPosts);
+
+router.get('/get-posts/user/:userId', validateObjectId('userId'), identifyUser, getPostsByUserId);
+
+router.get('/get-posts/project/:projectId', validateObjectId('projectId'), identifyUser, getPostsByProjectId);
 
 router.get('/details/:postId', validateObjectId('postId'), identifyUser, getPost);
 
