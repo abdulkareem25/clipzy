@@ -18,7 +18,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/create-post', upload.single('image'), identifyUser, createPost);
 
-router.get('/get-posts', identifyUser, getPosts);
+router.get('/feed', identifyUser, getPosts);
 
 router.get('/get-posts/user/:userId', validateObjectId('userId'), identifyUser, getPostsByUserId);
 
