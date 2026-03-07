@@ -61,7 +61,7 @@ const signIn = async (req, res) => {
             { email },
             { username }
         ]
-    });
+    }).select('+password');
 
     if (!user) {
         return res.status(409).json({
