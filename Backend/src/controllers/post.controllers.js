@@ -14,7 +14,7 @@ const createPost = async (req, res) => {
         caption,
         userId,
         projectId
-    });
+    }).populate('userId', ['username', 'profilePicture']).populate('projectId', ['title']);
 
     res.status(201).json({
         message: "Post created successfully.",
@@ -24,7 +24,7 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
     
-    const posts = await Post.find().populate('userId', ['fullName', 'email']);
+    const posts = await Post.find().populate('userId', ['username', 'profilePicture']).populate('projectId', ['title']);
 
     res.status(200).json({
         message: "Posts retrieved successfully.",
@@ -36,7 +36,7 @@ const getPostsByUserId = async (req, res) => {
 
     const { userId } = req.params;
 
-    const posts = await Post.find({ userId }).populate('userId', ['fullName', 'email']);
+    const posts = await Post.find({ userId }).populate('userId', ['username', 'profilePicture']).populate('projectId', ['title']);
 
     res.status(200).json({
         message: "Posts retrieved successfully.",
@@ -47,7 +47,7 @@ const getPostsByUserId = async (req, res) => {
 const getPostsByProjectId = async (req, res) => {
 
     const { projectId } = req.params;
-    const posts = await Post.find({ projectId }).populate('userId', ['fullName', 'email']);
+    const posts = await Post.find({ projectId }).populate('userId', ['username', 'profilePicture']).populate('projectId', ['title']);
 
     res.status(200).json({
         message: "Posts retrieved successfully.",
@@ -60,7 +60,7 @@ const getPost = async (req, res) => {
     const { postId } = req.params;
     const { userId } = req.user;
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate('userId', ['username', 'profilePicture']).populate('projectId', ['title']);
 
     if (!post) {
         return res.status(404).json({
