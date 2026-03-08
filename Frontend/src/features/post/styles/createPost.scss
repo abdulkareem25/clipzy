@@ -1,0 +1,214 @@
+@use '../../shared/styles/variables' as *;
+
+.create-post-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $sp-lg;
+}
+
+.create-post-modal {
+  background: $surface-base;
+  border-radius: $radius-lg;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $sp-lg;
+    border-bottom: 1px solid $border-light;
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: $text-primary;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: $text-secondary;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all $transition-base;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+  }
+
+  .create-post-form {
+    padding: $sp-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $sp-lg;
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: $text-primary;
+      padding: $sp-md;
+      border-radius: $radius-md;
+      font-size: $font-size-sm;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: $sp-sm;
+
+      label {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-semibold;
+        color: $text-primary;
+      }
+
+      .image-upload {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        border: 2px dashed $border-light;
+        border-radius: $radius-md;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all $transition-base;
+        overflow: hidden;
+
+        &:hover {
+          border-color: $primary-base;
+          background: rgba(61, 138, 255, 0.05);
+        }
+
+        .image-preview {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .upload-placeholder {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: $sp-sm;
+          color: $text-tertiary;
+
+          p {
+            margin: 0;
+            font-size: $font-size-sm;
+          }
+        }
+
+        .file-input {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+      }
+
+      .caption-input,
+      .project-input {
+        background: $bg-secondary;
+        border: 1px solid $border-light;
+        color: $text-primary;
+        padding: $sp-md;
+        border-radius: $radius-md;
+        font-family: inherit;
+        font-size: $font-size-sm;
+        resize: none;
+        transition: all $transition-base;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-base;
+          box-shadow: 0 0 0 3px rgba(61, 138, 255, 0.1);
+        }
+
+        &::placeholder {
+          color: $text-tertiary;
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: $sp-md;
+      margin-top: $sp-md;
+
+      .btn {
+        flex: 1;
+        padding: $sp-md;
+        border: none;
+        border-radius: $radius-md;
+        font-size: $font-size-base;
+        font-weight: $font-weight-semibold;
+        cursor: pointer;
+        transition: all $transition-base;
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .btn-primary {
+        background: $primary-base;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: $primary-hover;
+          box-shadow: 0 4px 12px rgba(61, 138, 255, 0.3);
+        }
+
+        &:active:not(:disabled) {
+          transform: scale(0.98);
+        }
+      }
+
+      .btn-secondary {
+        background: $bg-secondary;
+        color: $text-primary;
+        border: 1px solid $border-light;
+
+        &:hover:not(:disabled) {
+          background: $surface-hover;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .create-post-overlay {
+    padding: 0;
+  }
+
+  .create-post-modal {
+    max-width: 100%;
+    border-radius: 0;
+  }
+}

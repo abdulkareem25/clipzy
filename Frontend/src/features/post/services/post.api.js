@@ -8,4 +8,11 @@ const api = axios.create({
 export async function getFeed() {
   const response = await api.get("/feed");
   return response.data;
-};
+}
+
+export async function createPost(postData) {
+  const response = await api.post("/", postData);
+  return response.data;
+}
+
+export default api;
