@@ -11,7 +11,11 @@ export async function getFeed() {
 }
 
 export async function createPost(postData) {
-  const response = await api.post("/", postData);
+  const response = await api.post("/create-post", postData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
   return response.data;
 }
 

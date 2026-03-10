@@ -17,7 +17,7 @@ const SignIn = () => {
 
     await handleSignIn(email, password);
 
-    navigate('/');
+    navigate('/feed');
 
   };
 

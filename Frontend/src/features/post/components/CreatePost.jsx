@@ -62,18 +62,6 @@ const CreatePost = ({ onClose, onPostCreated }) => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -95,7 +83,7 @@ const CreatePost = ({ onClose, onPostCreated }) => {
       setLoading(true);
       const formData = new FormData();
       formData.append('caption', caption);
-      formData.append('imageUrl', imageFile);
+      formData.append('image', imageFile);
       formData.append('projectId', projectId);
       await createPost(formData);
       onPostCreated();
@@ -113,7 +101,7 @@ const CreatePost = ({ onClose, onPostCreated }) => {
         <div className="create-post-modal" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
             <h2>Create Post</h2>
-            <button className="close-btn" onClick={onClose}>X</button>
+            <button className="close-btn" onClick={onClose}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path></svg></button>
           </div>
 
           <form onSubmit={handleSubmit} className="create-post-form">
@@ -173,7 +161,11 @@ const CreatePost = ({ onClose, onPostCreated }) => {
                   id="image-input"
                   type="file"
                   accept="image/*"
-                  onChange={handleImageChange}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setImageFile(file);
+                    setImagePreview(URL.createObjectURL(file));
+                  }}
                   className="file-input"
                 />
               </div>
@@ -208,7 +200,7 @@ const CreatePost = ({ onClose, onPostCreated }) => {
           <div className="create-post-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Create Project</h2>
-              <button className="close-btn" onClick={() => setShowCreateProject(false)}>X</button>
+              <button className="close-btn" onClick={() => setShowCreateProject(false)}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path></svg></button>
             </div>
 
             <form onSubmit={handleCreateProject} className="create-post-form">
