@@ -6,7 +6,7 @@ const identifyUser = (req, res, next) => {
 
     if (!token) {
         return res.status(401).json({
-            message: "Token not found."
+            message: "Authentication token is missing."
         });
     };
 
