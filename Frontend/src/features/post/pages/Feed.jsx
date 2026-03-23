@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import CreatePost from '../components/CreatePost.jsx';
 import Post from '../components/Post.jsx';
 import { useFeed } from '../hooks/useFeed.js';
 import '../styles/feed.scss';
 
 const Feed = () => {
-  const { loading, feed, fetchFeed } = useFeed();
+  const navigate = useNavigate();
+  const { loading, feed, fetchFeed, error } = useFeed();
   const [showCreatePost, setShowCreatePost] = useState(false);
 
   useEffect(() => {
@@ -20,6 +22,23 @@ const Feed = () => {
   if (loading) {
     return <div className="loading">Loading feed...</div>
   };
+
+  if (error === "Authentication token is missing.") {
+    console.log(error);
+    return (
+      <div className="feed">
+        <header className="feed-header">
+          <div className="header-content">
+            <h3 className="logo">Clipzy</h3>
+            <p className="header-subtitle">Please sign in to view your feed.</p>
+            <button className="create-post-btn" onClick={() => navigate('/signin')}>
+              Sign In to View Feed
+            </button>
+          </div>
+        </header>
+      </div>
+    )
+  }
 
   return (
     <div className="feed">
@@ -46,15 +65,12 @@ const Feed = () => {
 
       <main className="feed-main">
         <div className="feed-container">
-          {feed.length === 0 ? (
-            <div className="empty-feed">
-              <h2>Your feed is empty</h2>
-              <p>Follow some users to see their posts here.</p>
-            </div>
+          {error ? (
+            <div className="error-message">{error}</div>
+          ) : feed.length === 0 ? (
+            <div className="no-posts">No posts to show. Follow some creators to see their posts here!</div>
           ) : (
-            feed.map((post) => (
-              <Post key={post._id} post={post} />
-            ))
+            feed.sort((a, b) => b.createdAt - a.createdAt).map((post) => <Post key={post._id} post={post} />)
           )}
         </div>
       </main>

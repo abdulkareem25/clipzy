@@ -95,6 +95,17 @@
       gap: $sp-2xl;
       padding-top: $sp-xl;
 
+      .error-message {
+        text-align: center;
+        color: $error-base;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: $sp-md;
+        border-radius: $radius-md;
+      }
+
       .empty-feed {
         text-align: center;
         color: $text-secondary;

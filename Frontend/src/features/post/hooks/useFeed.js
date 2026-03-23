@@ -5,7 +5,7 @@ import { getFeed } from "../services/post.api";
 export const useFeed = () => {
   const context = useContext(PostContext);
 
-  const { loading, setLoading, feed, setFeed } = context;
+  const { loading, setLoading, feed, setFeed, error, setError} = context;
 
   const fetchFeed = async () => {
     setLoading(true);
@@ -14,6 +14,7 @@ export const useFeed = () => {
       setFeed(data.posts);
     } catch (error) {
       console.error('Error fetching feed:', error);
+      setError(error.response?.data?.message);
       setFeed([]);
     }
     setLoading(false);
@@ -22,6 +23,7 @@ export const useFeed = () => {
   return {
     loading,
     feed,
-    fetchFeed
+    fetchFeed,
+    error
   }
 };

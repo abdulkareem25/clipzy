@@ -1,4 +1,5 @@
 import { formatCaptionWithHashtags } from '../services/extractHashtags.service.jsx';
+import { getRelativeTime } from '../services/formatTime.service.js';
 
 const Post = ({ post }) => {
   return (
@@ -10,7 +11,7 @@ const Post = ({ post }) => {
           <div className="user-details">
             <div className="post-details">
               <h4 className="username">{post.userId.username}</h4>
-              <span className="timestamp">2 hours ago</span>
+              <span className="timestamp">{getRelativeTime(post.createdAt, post.updatedAt)}</span>
             </div>
             <p className="project-title">{post.projectId.title}</p>
           </div>
