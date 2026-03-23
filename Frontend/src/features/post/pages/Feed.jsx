@@ -70,7 +70,7 @@ const Feed = () => {
           ) : feed.length === 0 ? (
             <div className="no-posts">No posts to show. Follow some creators to see their posts here!</div>
           ) : (
-            feed.sort((a, b) => b.createdAt - a.createdAt).map((post) => <Post key={post._id} post={post} />)
+            feed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((post) => <Post key={post._id} post={post} />)
           )}
         </div>
       </main>
