@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../auth/hooks/useAuth.js';
 import CreatePost from '../components/CreatePost.jsx';
 import Post from '../components/Post.jsx';
 import { useFeed } from '../hooks/useFeed.js';
@@ -7,12 +8,13 @@ import '../styles/feed.scss';
 
 const Feed = () => {
   const navigate = useNavigate();
-  const { loading, feed, fetchFeed, error } = useFeed();
+  const { user } = useAuth();
+  const { loading, feed, fetchFeed, error, feedType, switchFeedType } = useFeed();
   const [showCreatePost, setShowCreatePost] = useState(false);
 
   useEffect(() => {
     fetchFeed();
-  }, []);
+  }, [user]);
 
   const handlePostCreated = () => {
     setShowCreatePost(false);
@@ -23,43 +25,78 @@ const Feed = () => {
     return <div className="loading">Loading feed...</div>
   };
 
-  if (error === "Authentication token is missing.") {
-    console.log(error);
-    return (
-      <div className="feed">
-        <header className="feed-header">
-          <div className="header-content">
-            <h3 className="logo">Clipzy</h3>
-            <p className="header-subtitle">Please sign in to view your feed.</p>
-            <button className="create-post-btn" onClick={() => navigate('/signin')}>
-              Sign In to View Feed
-            </button>
-          </div>
-        </header>
-      </div>
-    )
-  }
-
   return (
     <div className="feed">
       <header className="feed-header">
         <div className="header-content">
-          <h3 className="logo">Clipzy</h3>
-          <p className="header-subtitle">Stream of proof posts from people you follow</p>
-          <button
-            className="create-post-btn"
-            onClick={() => setShowCreatePost(true)}
-            aria-label="Create new post"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
-            </svg>
-            Create Post
-          </button>
+          <div className="header-top">
+            <div className="header-brand">
+              <h3 className="logo">Clipzy</h3>
+              <p className="brand-tag">Where Ideas Proof</p>
+            </div>
+            {!user ? (
+              <div className="auth-buttons">
+                <button className="btn-secondary" onClick={() => navigate('/signin')}>
+                  Sign In
+                </button>
+                <button className="btn-primary" onClick={() => navigate('/signup')}>
+                  Join Now
+                </button>
+              </div>
+            ) : (
+              <div className="header-actions">
+                <button
+                  className="create-post-btn"
+                  onClick={() => setShowCreatePost(true)}
+                  aria-label="Create new post"
+                  title="Create new post"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
+                  </svg>
+                  Create Post
+                </button>
+                <button
+                  className="profile-btn"
+                  onClick={() => navigate(`/profile/${user?.username}`)}
+                  aria-label="View profile"
+                  title="View your profile"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="header-divider"></div>
+          {user ? (
+            <div className="feed-type-toggle">
+              <button
+                className={`toggle-btn ${feedType === 'discover' ? 'active' : ''}`}
+                onClick={() => switchFeedType('discover')}
+                title="Discover posts from all creators"
+              >
+                🌍 Discover
+              </button>
+              <button
+                className={`toggle-btn ${feedType === 'following' ? 'active' : ''}`}
+                onClick={() => switchFeedType('following')}
+                title="Posts from creators you follow"
+              >
+                📸 Following
+              </button>
+            </div>
+          ) : null}
+          <p className="header-subtitle">
+            {feedType === 'following'
+              ? 'Stream of proof posts from people you follow'
+              : 'Explore posts from all creators on Clipzy'}
+          </p>
         </div>
       </header>
 
-      {showCreatePost && (
+      {user && showCreatePost && (
         <CreatePost onClose={() => setShowCreatePost(false)} onPostCreated={handlePostCreated} />
       )}
 
@@ -68,7 +105,11 @@ const Feed = () => {
           {error ? (
             <div className="error-message">{error}</div>
           ) : feed.length === 0 ? (
-            <div className="no-posts">No posts to show. Follow some creators to see their posts here!</div>
+            <div className="no-posts">
+              {feedType === 'following'
+                ? 'No posts to show. Follow some creators to see their posts here!'
+                : 'No posts yet. Be the first to share something amazing!'}
+            </div>
           ) : (
             feed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((post) => <Post key={post._id} post={post} />)
           )}

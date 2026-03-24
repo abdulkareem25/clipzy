@@ -7,6 +7,7 @@ export const PostProvider = ({ children }) => {
   const [feed, setFeed] = useState([]);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState(null);
+  const [feedType, setFeedType] = useState('discover'); // 'discover' or 'following'
 
   return (
     <PostContext.Provider value={{
@@ -17,7 +18,9 @@ export const PostProvider = ({ children }) => {
       creating,
       setCreating,
       error,
-      setError
+      setError,
+      feedType,
+      setFeedType
     }}>
       {children}
     </PostContext.Provider>

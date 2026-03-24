@@ -22,24 +22,165 @@
   background: $bg-secondary;
 
   .feed-header {
-    padding: $sp-md $sp-lg;
-    background: linear-gradient(180deg, $bg-primary 0%, rgba(8, 14, 26, 0.5) 100%);
-    backdrop-filter: blur(10px);
+    padding: $sp-lg $sp-lg;
+    background: linear-gradient(135deg, $bg-primary 0%, rgba(8, 14, 26, 0.7) 100%);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid $border-light;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top right, rgba(61, 138, 255, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
 
     .header-content {
       display: flex;
       flex-direction: column;
-      gap: $sp-md;
+      gap: $sp-lg;
+      position: relative;
+      z-index: 1;
 
-      .logo {
-        margin: 0;
-        font-size: 1.75rem;
-        font-weight: 700;
-        background: $gradient-primary;
-        background-clip: text;
-        letter-spacing: 0.5px;
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: $sp-xl;
+      }
+
+      .header-brand {
+        display: flex;
+        flex-direction: column;
+        gap: $sp-xs;
+
+        .logo {
+          margin: 0;
+          font-size: 2rem;
+          font-weight: 800;
+          background: linear-gradient(135deg, $primary-base 0%, #5fa8ff 100%);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          letter-spacing: 0.5px;
+          line-height: 1;
+        }
+
+        .brand-tag {
+          margin: 0;
+          font-size: $font-size-xs;
+          color: $primary-base;
+          font-weight: $font-weight-semibold;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: $sp-md;
+        align-items: center;
+
+        .btn-secondary {
+          background: transparent;
+          color: $primary-base;
+          border: 2px solid $primary-base;
+          border-radius: $radius-md;
+          padding: $sp-sm $sp-lg;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-semibold;
+          cursor: pointer;
+          transition: all $transition-base;
+
+          &:hover {
+            background: rgba(61, 138, 255, 0.15);
+            border-color: $primary-hover;
+            color: $primary-hover;
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, $primary-base 0%, $primary-hover 100%);
+          color: white;
+          border: none;
+          border-radius: $radius-md;
+          padding: $sp-sm $sp-lg;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-bold;
+          cursor: pointer;
+          transition: all $transition-base;
+          box-shadow: 0 4px 12px rgba(61, 138, 255, 0.3);
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(61, 138, 255, 0.4);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: $sp-lg;
+        align-items: center;
+      }
+
+      .header-divider {
+        height: 1px;
+        background: linear-gradient(to right,
+            transparent,
+            $border-light 20%,
+            $border-light 80%,
+            transparent);
+      }
+
+      .feed-type-toggle {
+        display: flex;
+        gap: $sp-sm;
+        align-items: center;
+        justify-content: center;
+
+        .toggle-btn {
+          background: transparent;
+          color: $text-secondary;
+          border: 1px solid transparent;
+          border-radius: $radius-md;
+          padding: $sp-xs $sp-md;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-semibold;
+          cursor: pointer;
+          transition: all $transition-base;
+          white-space: nowrap;
+
+          &:hover {
+            background: rgba(61, 138, 255, 0.08);
+            color: $text-primary;
+          }
+
+          &.active {
+            background: linear-gradient(135deg, rgba(61, 138, 255, 0.15) 0%, rgba(61, 138, 255, 0.05) 100%);
+            color: $primary-base;
+            border-color: $primary-base;
+            box-shadow: 0 2px 8px rgba(61, 138, 255, 0.2);
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
       }
 
       .header-subtitle {
@@ -47,7 +188,8 @@
         margin: 0;
         font-size: $font-size-sm;
         color: $text-secondary;
-        font-weight: $font-weight-normal;
+        font-weight: $font-weight-medium;
+        letter-spacing: 0.3px;
       }
 
       .create-post-btn {
@@ -55,15 +197,17 @@
         align-items: center;
         justify-content: center;
         gap: $sp-sm;
-        background: $primary-base;
+        background: linear-gradient(135deg, $primary-base 0%, $primary-hover 100%);
         color: white;
         border: none;
         border-radius: $radius-md;
         padding: $sp-sm $sp-lg;
         font-size: $font-size-sm;
-        font-weight: $font-weight-semibold;
+        font-weight: $font-weight-bold;
         cursor: pointer;
         transition: all $transition-base;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(61, 138, 255, 0.3);
 
         svg {
           width: 18px;
@@ -71,9 +215,42 @@
         }
 
         &:hover {
-          background: $primary-hover;
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(61, 138, 255, 0.3);
+          box-shadow: 0 8px 20px rgba(61, 138, 255, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      .profile-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, rgba(61, 138, 255, 0.2) 0%, rgba(61, 138, 255, 0.05) 100%);
+        color: $primary-base;
+        border: 2px solid $primary-base;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all $transition-base;
+        padding: 0;
+        min-width: 48px;
+        box-shadow: 0 2px 8px rgba(61, 138, 255, 0.15);
+
+        svg {
+          width: 22px;
+          height: 22px;
+        }
+
+        &:hover {
+          background: linear-gradient(135deg, $primary-base 0%, $primary-hover 100%);
+          color: white;
+          border-color: $primary-hover;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(61, 138, 255, 0.4);
         }
 
         &:active {

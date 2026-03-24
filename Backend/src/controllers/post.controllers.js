@@ -1,6 +1,7 @@
 const uploadImage = require("../services/storage.service");
 const Post = require("../models/post.model");
 const Like = require("../models/like.model");
+const Follow = require("../models/follow.model");
 
 const createPost = async (req, res) => {
     const { buffer } = req.file;
@@ -32,6 +33,19 @@ const getPosts = async (req, res) => {
         .populate('userId', ['username', 'profilePicture'])
         .populate('projectId', ['title']);
 
+    res.status(200).json({
+        message: "Posts retrieved successfully.",
+        posts
+    });
+};
+
+const getPostsByFollowing = async (req, res) => {
+
+    const { userId } = req.user;
+
+    const posts = await Post.find({ userId: { $in: await Follow.find({ followerId: userId, status: "accepted" }).distinct("followeeId") } })
+        .populate('userId', ['username', 'profilePicture'])
+        .populate('projectId', ['title']);
     res.status(200).json({
         message: "Posts retrieved successfully.",
         posts
@@ -165,6 +179,7 @@ const disLikePost = async (req, res) => {
 module.exports = {
     createPost,
     getPosts,
+    getPostsByFollowing,
     getPostsByUserId,
     getPostsByProjectId,
     getPost,

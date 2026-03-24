@@ -9,7 +9,8 @@ const {
   getPostsByProjectId,
   getPost, 
   likePost, 
-  disLikePost 
+  disLikePost, 
+  getPostsByFollowing
 } = require('../controllers/post.controllers');
 
 const router = Router();
@@ -18,7 +19,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/create-post', upload.single('image'), identifyUser, createPost);
 
-router.get('/feed', identifyUser, getPosts);
+router.get('/feed', getPosts);
+
+router.get('/get-following-posts', identifyUser, getPostsByFollowing);
 
 router.get('/get-posts/user/:userId', validateObjectId('userId'), identifyUser, getPostsByUserId);
 

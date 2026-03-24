@@ -6,17 +6,40 @@ const api = axios.create({
 });
 
 export async function getFeed() {
-  const response = await api.get("/feed");
-  return response.data;
+  try {
+    const response = await api.get("/feed");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getFollowingPosts() {
+  try {
+    const response = await api.get("/get-following-posts");
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error("Authentication token is missing. Please sign in.");
+    }
+    throw error;
+  }
 }
 
 export async function createPost(postData) {
-  const response = await api.post("/create-post", postData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+  try {
+    const response = await api.post("/create-post", postData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error("Authentication token is missing. Please sign in.");
     }
-  });
-  return response.data;
+    throw error;
+  }
 }
 
 export default api;
