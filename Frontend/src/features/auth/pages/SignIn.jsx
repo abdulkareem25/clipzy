@@ -1,12 +1,12 @@
-import { Link, useNavigate } from 'react-router'
-import '../styles/main.scss'
-import '../styles/form.scss'
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import '../styles/form.scss';
+import '../styles/main.scss';
 
 const SignIn = () => {
 
-  const [email, setEmail] = useState("");
+  const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { user, loading, handleSignIn } = useAuth();
@@ -15,13 +15,13 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await handleSignIn(email, password);
+    await handleSignIn(credential, password);
 
     navigate('/feed');
 
   };
 
-  if(loading) return (
+  if (loading) return (
     <main className='main'>
       <div className="form-container">
         <h2 className='logo'>Loading...</h2>
@@ -35,13 +35,14 @@ const SignIn = () => {
         <h2 className='logo'>Clipzy</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="credential">Email or Username</label>
             <input
-              value={email}
-              type="email"
-              id="email"
-              name="email"
-              onChange={(e) => setEmail(e.target.value)}
+              value={credential}
+              type="text"
+              id="credential"
+              name="credential"
+              placeholder="Enter your email or username"
+              onChange={(e) => setCredential(e.target.value)}
               required
             />
           </div>

@@ -10,9 +10,10 @@ export const signUp = async (userData) => {
   return response.data;
 };
 
-export const signIn = async (email, password) => {
+export const signIn = async (credential, password) => {
   const response = await api.post('/sign-in', {
-    email,
+    email: credential,
+    username: credential,
     password
   });
   return response.data;

@@ -21,11 +21,11 @@ export const useAuth = () => {
   };
 
 
-  const handleSignIn = async (email, password) => {
+  const handleSignIn = async (credential, password) => {
 
     setLoading(true);
 
-    const response = await signIn(email, password);
+    const response = await signIn(credential, password);
 
     setUser(response.user);
     setLoading(false);
