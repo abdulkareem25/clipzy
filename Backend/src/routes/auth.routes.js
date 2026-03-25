@@ -1,10 +1,13 @@
 const express = require('express');
+const multer = require('multer');
 const { signUp, signIn, signOut, getUser } = require('../controllers/auth.controllers');
 const identifyUser = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
-router.post('/sign-up', signUp);
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post('/sign-up', upload.single('profilePicture'), signUp);
 
 router.post('/sign-in', signIn);
 

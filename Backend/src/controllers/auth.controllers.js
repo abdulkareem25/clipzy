@@ -1,10 +1,11 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const uploadImage = require('../services/storage.service');
 
 const signUp = async (req, res) => {
 
-    const { fullName, email, password, username, bio, profilePicture } = req.body;
+    const { fullName, email, password, username, bio } = req.body;
 
     const isExists = await User.findOne({
         $or: [
@@ -23,13 +24,20 @@ const signUp = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 7);
 
+    let profilePictureUrl = '';
+
+    if (req.file) {
+        const result = await uploadImage(req.file.buffer, 'temp');
+        profilePictureUrl = result.url;
+    }
+
     const user = await User.create({
         fullName,
         email,
         password: hashedPassword,
         username,
         bio,
-        profilePicture
+        profilePicture: profilePictureUrl
     });
 
     const token = jwt.sign(
