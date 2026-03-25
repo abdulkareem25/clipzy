@@ -1,7 +1,64 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../../auth/hooks/useAuth.js';
 import { formatCaptionWithHashtags } from '../services/extractHashtags.service.jsx';
 import { getRelativeTime } from '../services/formatTime.service.js';
+import { checkFollowStatus, followUser, unfollowUser } from '../services/user.api.js';
 
 const Post = ({ post }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Check if this is the user's own post (convert both to string for proper comparison)
+  const isOwnPost = user && String(user.username) === String(post.userId.username);
+
+  // Check initial follow status when component mounts
+  useEffect(() => {
+    if (user && !isOwnPost) {
+      const checkStatus = async () => {
+        try {
+          const data = await checkFollowStatus(post.userId._id);
+          setIsFollowing(data.isFollowing);
+        } catch (error) {
+          console.error('Error checking follow status:', error);
+          setIsFollowing(false);
+        }
+      };
+      checkStatus();
+    }
+  }, [user, post.userId._id, isOwnPost]);
+
+  const handleFollowClick = async () => {
+    // Check if user is authenticated
+    if (!user) {
+      const isWantToSignIn = window.confirm('You need to login or signup to follow users.\n\nClick OK to go to Sign In or Cancel to continue browsing.');
+      if (isWantToSignIn) {
+        navigate('/signin');
+      }
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      if (isFollowing) {
+        // Unfollow user
+        await unfollowUser(post.userId._id);
+        setIsFollowing(false);
+      } else {
+        // Follow user
+        await followUser(post.userId._id);
+        setIsFollowing(true);
+      }
+    } catch (error) {
+      console.error('Error toggling follow:', error);
+      alert(error.response?.data?.message || 'Failed to toggle follow status');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="post">
       <div className="post-header">
@@ -16,11 +73,16 @@ const Post = ({ post }) => {
             <p className="project-title">{post.projectId.title}</p>
           </div>
         </div>
-        <button className="options-btn" aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 8c1.1 0 2-0.9 2-2s-0.9-2-2-2-2 0.9-2 2 0.9 2 2 2zm0 2c-1.1 0-2 0.9-2 2s0.9 2 2 2 2-0.9 2-2-0.9-2-2-2zm0 6c-1.1 0-2 0.9-2 2s0.9 2 2 2 2-0.9 2-2-0.9-2-2-2z" />
-          </svg>
-        </button>
+        {!isOwnPost && (
+          <button
+            className="follow-btn"
+            onClick={handleFollowClick}
+            disabled={isLoading}
+            aria-label={isFollowing ? 'Unfollow user' : 'Follow user'}
+          >
+            {isLoading ? (isFollowing ? 'Unfollowing...' : 'Following...') : isFollowing ? 'Following' : 'Follow'}
+          </button>
+        )}
       </div>
       <div className="post-content">
         <img src={post.imageUrl}
@@ -45,7 +107,7 @@ const Post = ({ post }) => {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 export default Post

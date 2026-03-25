@@ -62,6 +62,7 @@ export const useAuth = () => {
 
   return {
     user,
+    setUser,
     loading,
     handleSignUp,
     handleSignIn,
