@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../auth/hooks/useAuth.js';
 import { signOut } from '../../auth/services/auth.api.js';
+import '../../shared/styles/_logo.scss';
 import CreatePost from '../components/CreatePost.jsx';
 import Post from '../components/Post.jsx';
 import { useFeed } from '../hooks/useFeed.js';
@@ -68,9 +69,8 @@ const Feed = () => {
       <header className="feed-header">
         <div className="header-content">
           <div className="header-top">
-            <div className="header-brand">
-              <h3 className="logo">Clipzy</h3>
-              <p className="brand-tag">Where Ideas Proof</p>
+            <div className="header-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+              <h2 className="logo">Clipzy</h2>
             </div>
             {!user ? (
               <div className="auth-buttons">
@@ -100,30 +100,28 @@ const Feed = () => {
                     className="profile-btn"
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     aria-label="User menu"
-                    title={user?.username}
+                    title={user?.fullName}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
+                    <img src={user?.profilePicture} alt={user?.fullName} />
                   </button>
                   {showUserMenu && (
                     <div className="user-menu-dropdown" style={{ top: `${menuPosition.top}px` }}>
-                      <div className="menu-header">
-                        <p className="user-greeting">Hey, {user?.username}! 👋</p>
+                      <div className="profile-card">
+                        <img src={user?.profilePicture} alt={user?.fullName} className="profile-image" />
+                        <div className="profile-info">
+                          <h3 className="profile-name">{user?.fullName}</h3>
+                          <p className="profile-username">@{user?.username}</p>
+                          <p className="profile-bio">{user?.bio || 'No bio added yet'}</p>
+                        </div>
+                        <button
+                          className="view-profile-btn"
+                          disabled
+                          title="Profile page coming soon!"
+                        >
+                          Coming Soon 🚀
+                        </button>
                       </div>
-                      <button
-                        className="menu-item"
-                        onClick={() => {
-                          navigate(`/profile/${user?.username}`);
-                          setShowUserMenu(false);
-                        }}
-                        aria-label="View profile"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                        </svg>
-                        <span>View Profile</span>
-                      </button>
+                      <div className="menu-divider"></div>
                       <button
                         className="menu-item logout-item"
                         onClick={handleLogout}
@@ -140,7 +138,6 @@ const Feed = () => {
               </div>
             )}
           </div>
-          <div className="header-divider"></div>
           {user ? (
             <div className="feed-type-toggle">
               <button
@@ -159,11 +156,6 @@ const Feed = () => {
               </button>
             </div>
           ) : null}
-          <p className="header-subtitle">
-            {feedType === 'following'
-              ? 'Stream of proof posts from people you follow'
-              : 'Explore posts from all creators on Clipzy'}
-          </p>
         </div>
       </header>
 
