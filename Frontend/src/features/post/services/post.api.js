@@ -42,4 +42,28 @@ export async function createPost(postData) {
   }
 }
 
+export async function likePost(postId) {
+  try {
+    const response = await api.post(`/like/${postId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error("Authentication token is missing. Please sign in.");
+    }
+    throw error;
+  }
+}
+
+export async function dislikePost(postId) {
+  try {
+    const response = await api.post(`/dislike/${postId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error("Authentication token is missing. Please sign in.");
+    }
+    throw error;
+  }
+}
+
 export default api;

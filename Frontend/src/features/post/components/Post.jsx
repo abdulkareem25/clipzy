@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../../auth/hooks/useAuth.js';
 import { formatCaptionWithHashtags } from '../services/extractHashtags.service.jsx';
 import { getRelativeTime } from '../services/formatTime.service.js';
+import { dislikePost, likePost } from '../services/post.api.js';
 import { checkFollowStatus, followUser, unfollowUser } from '../services/user.api.js';
 
 const Post = ({ post }) => {
@@ -10,6 +11,8 @@ const Post = ({ post }) => {
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
 
   // Check if this is the user's own post (convert both to string for proper comparison)
   const isOwnPost = user && String(user.username) === String(post.userId.username);
@@ -59,6 +62,35 @@ const Post = ({ post }) => {
     }
   };
 
+  const handleLikeClick = async () => {
+    // Check if user is authenticated
+    if (!user) {
+      const isWantToSignIn = window.confirm('You need to login or signup to like posts.\n\nClick OK to go to Sign In or Cancel to continue browsing.');
+      if (isWantToSignIn) {
+        navigate('/signin');
+      }
+      return;
+    }
+
+    try {
+      setLikeLoading(true);
+      if (isLiked) {
+        // Unlike the post
+        await dislikePost(post._id);
+        setIsLiked(false);
+      } else {
+        // Like the post
+        await likePost(post._id);
+        setIsLiked(true);
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      alert(error.response?.data?.message || 'Failed to toggle like status');
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
   return (
     <div className="post">
       <div className="post-header">
@@ -90,11 +122,21 @@ const Post = ({ post }) => {
         <p className="caption">{formatCaptionWithHashtags(post.caption)}</p>
       </div>
       <div className="post-actions">
-        <button className="action-btn like-btn" aria-label="Like post" disabled title="Coming Soon!">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path>
-          </svg>
-          <span className="count">Coming Soon 🚀</span>
+        <button
+          className={`action-btn like-btn ${isLiked ? 'liked' : ''}`}
+          onClick={handleLikeClick}
+          disabled={likeLoading}
+          aria-label={isLiked ? 'Unlike post' : 'Like post'}
+        >
+          {isLiked ? (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff0000">
+              <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853Z"></path>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path>
+            </svg>
+          )}
         </button>
         <button className="action-btn comment-btn" aria-label="Comment on post" disabled title="Coming Soon!">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
