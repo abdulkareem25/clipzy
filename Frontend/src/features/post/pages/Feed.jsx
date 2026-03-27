@@ -118,7 +118,7 @@ const Feed = () => {
                           disabled
                           title="Profile page coming soon!"
                         >
-                          Coming Soon 🚀
+                          View Profile
                         </button>
                       </div>
                       <div className="menu-divider"></div>
