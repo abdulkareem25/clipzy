@@ -91,10 +91,14 @@ const Post = ({ post }) => {
     }
   };
 
+  const handleProfileClick = () => {
+    navigate(`/profile/${post.userId._id}`);
+  };
+
   return (
     <div className="post">
       <div className="post-header">
-        <div className="user-info">
+        <div className="user-info" onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
           <img src={post.userId.profilePicture}
             alt="User Avatar" className="avatar" />
           <div className="user-details">

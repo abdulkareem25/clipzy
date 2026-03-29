@@ -60,6 +60,11 @@ const Feed = () => {
     fetchFeed();
   };
 
+  const handleViewProfile = () => {
+    navigate(`/profile/${user._id}`);
+    setShowUserMenu(false);
+  };
+
   if (loading) {
     return <div className="loading">Loading feed...</div>
   };
@@ -115,8 +120,8 @@ const Feed = () => {
                         </div>
                         <button
                           className="view-profile-btn"
-                          disabled
-                          title="Profile page coming soon!"
+                          onClick={handleViewProfile}
+                          aria-label="View your profile"
                         >
                           View Profile
                         </button>
