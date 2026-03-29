@@ -1,6 +1,6 @@
 const express = require('express');
 const identifyUser = require('../middlewares/auth.middleware');
-const { directFollow, followRequest, unFollowUser, getFollowers, getFollowing, getPendingRequests, acceptFollowRequest, rejectFollowRequest, checkFollowStatus } = require('../controllers/user.controllers');
+const { directFollow, followRequest, unFollowUser, getFollowers, getFollowing, getPendingRequests, acceptFollowRequest, rejectFollowRequest, checkFollowStatus, getUserById, updateUserProfile } = require('../controllers/user.controllers');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
 
 const router = express.Router();
@@ -65,6 +65,19 @@ router.get(
     validateObjectId('followerId'),
     identifyUser,
     getFollowing
+);
+
+router.get(
+    '/:userId',
+    validateObjectId('userId'),
+    identifyUser,
+    getUserById
+);
+
+router.put(
+    '/profile',
+    identifyUser,
+    updateUserProfile
 );
 
 module.exports = router;

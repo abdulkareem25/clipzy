@@ -283,6 +283,63 @@ async function getFollowing(req, res) {
     });
 };
 
+async function getUserById(req, res) {
+    try {
+        const { userId } = req.params;
+
+        const user = await User.findById(userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found."
+            });
+        }
+
+        res.status(200).json({
+            message: "User retrieved successfully.",
+            user
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to retrieve user.",
+            error: error.message
+        });
+    }
+};
+
+async function updateUserProfile(req, res) {
+    try {
+        const { userId } = req.user;
+        const { fullName, bio, profilePicture } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                fullName: fullName || undefined,
+                bio: bio || undefined,
+                profilePicture: profilePicture || undefined
+            },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: "User not found."
+            });
+        }
+
+        res.status(200).json({
+            message: "Profile updated successfully.",
+            user: updatedUser
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to update profile.",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     directFollow,
     followRequest,
@@ -292,5 +349,7 @@ module.exports = {
     unFollowUser,
     checkFollowStatus,
     getFollowers,
-    getFollowing
+    getFollowing,
+    getUserById,
+    updateUserProfile
 };
