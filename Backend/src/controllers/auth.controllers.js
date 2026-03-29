@@ -51,6 +51,7 @@ const signUp = async (req, res) => {
     res.status(201).json({
         message: "User registered successfully.",
         user: {
+            _id: user._id,
             fullName: user.fullName,
             email: user.email,
             username: user.username,
@@ -96,6 +97,7 @@ const signIn = async (req, res) => {
     res.status(200).json({
         message: "User logged in successfully.",
         user: {
+            _id: user._id,
             fullName: user.fullName,
             email: user.email,
             username: user.username,
@@ -126,6 +128,7 @@ const getUser = async (req, res) => {
 
     res.status(200).json({
         user: {
+            _id: user._id,
             fullName: user.fullName,
             email: user.email,
             username: user.username,
