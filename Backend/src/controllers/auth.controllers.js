@@ -61,7 +61,7 @@ const signUp = async (req, res) => {
     });
 };
 
-const signIn = async (req, res) => {
+const signIn = async (req, res, next) => {
 
     const { email, username, password } = req.body;
 
@@ -73,9 +73,10 @@ const signIn = async (req, res) => {
     }).select('+password');
 
     if (!user) {
-        return res.status(409).json({
-            message: "Invalid Credentials."
-        });
+        const error = new Error("User Not Found.");
+        error.statusCode = 404;
+
+        return next(error);
     };
 
     const isValid = await bcrypt.compare(password, user.password);

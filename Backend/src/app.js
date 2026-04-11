@@ -8,6 +8,7 @@ const authRouter = require('./routes/auth.routes');
 const projectRouter = require('./routes/project.routes');
 const postRouter = require('./routes/post.routes');
 const UserRouter = require('./routes/user.routes');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -24,6 +25,10 @@ app.use('/api/auth', authRouter);
 app.use('/api/projects', projectRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/users', UserRouter);
+
+
+// error handler
+app.use(errorHandler);
 
 
 module.exports = app;
