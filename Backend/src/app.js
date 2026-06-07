@@ -16,15 +16,21 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CLIENT_URL,
     credentials: true
 }));
+
+app.use(express.static('./public'));
 
 // use routers
 app.use('/api/auth', authRouter);
 app.use('/api/projects', projectRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/users', UserRouter);
+
+app.use(/.*/, (req, res) => {
+    res.sendFile('index.html', { root: './public' });
+})
 
 
 // error handler
