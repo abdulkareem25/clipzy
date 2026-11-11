@@ -82,18 +82,36 @@ const signIn = async (req, res, next) => {
     const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
-        return res.status(409).json({
+        return res.status(400).json({
             message: "Invalid Credentials."
         });
     };
 
     const token = jwt.sign(
-        { userId: user._id },
+        { _id: user._id },
         process.env.JWT_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '7d' }
     );
 
-    res.cookie('token', token);
+    const accessToken = jwt.sign(
+        { _id: user._id },
+        process.env.ACCESS_SECRET,
+        { expiresIn: '15m' }
+    )
+
+    res.cookie('token', token, {
+        maxAge: 7 * 24 * 60 * 60
+    });
+    res.cookie('access_token', accessToken, {
+        maxAge: 15 * 60 * 60
+    });
+
+    //update user refresh token in database
+
+    const updatedUser = await User.updateOne(
+        { _id: user._id },
+        { $set: { refresh_token: token } },
+        { new: true });
 
     res.status(200).json({
         message: "User logged in successfully.",
@@ -139,5 +157,42 @@ const getUser = async (req, res) => {
     });
 };
 
+const refreshToken = async (req, res) => {
+    const user = await User.findById(req.user._id);
 
-module.exports = { signUp, signIn, signOut, getUser };
+    if (!user) return res.status(401).json({
+        message: "Unathorized"
+    });
+
+    const isValid = await jwt.verify(user.refresh_token, process.env.JWT_SECRET);
+
+    if (!isValid) return res.status(401).json({
+        message: "Invalid Token."
+    });
+
+    const token = await jwt.sign(
+        { _id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+    );
+
+    const accessToken = await jwt.sign(
+        { _id: user._id },
+        process.env.ACCESS_SECRET,
+        { expiresIn: '15m' }
+    );
+
+    await User.updateOne(
+        { _id: user._id },
+        { $set: { refresh_token: token } }
+    );
+
+    res.cookie('token', token, { maxAge: 7 * 24 * 60 * 60 });
+    res.cookie('access_token', accessToken, { maxAge: 15 * 60 * 60 });
+
+    return res.status(200).json({
+        message: "Token Refreshed Successfully."
+    })
+};
+
+module.exports = { signUp, signIn, signOut, getUser, refreshToken };

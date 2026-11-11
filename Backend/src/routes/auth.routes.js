@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { signUp, signIn, signOut, getUser } = require('../controllers/auth.controllers');
+const { signUp, signIn, signOut, getUser, refreshToken } = require('../controllers/auth.controllers');
 const identifyUser = require('../middlewares/auth.middleware');
 
 const router = express.Router();
@@ -14,5 +14,7 @@ router.post('/sign-in', signIn);
 router.post('/sign-out', identifyUser, signOut);
 
 router.get('/get-user', identifyUser, getUser);
+
+router.post('/refresh', identifyUser, refreshToken)
 
 module.exports = router;

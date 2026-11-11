@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://ik.imagekit.io/abdulkareem25/default_pfp.jpg"
     },
+    refresh_token: {
+        type: String,
+    }
 });
 
 const User = mongoose.model('users', userSchema);
