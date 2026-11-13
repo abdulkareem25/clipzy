@@ -3,7 +3,7 @@ const User = require("../models/user.model");
 
 async function directFollow(req, res) {
     const { followeeId } = req.params;
-    const followerId = req.user.userId;
+    const followerId = req.user._id;
 
     const isfolloweeExist = await User.findById(followeeId);
 
@@ -46,7 +46,7 @@ async function directFollow(req, res) {
 async function followRequest(req, res) {
 
     const { followeeId } = req.params;
-    const followerId = req.user.userId;
+    const followerId = req.user._id;
 
     const isfolloweeExist = await User.findById(followeeId);
 
@@ -99,9 +99,9 @@ async function followRequest(req, res) {
 };
 
 async function getPendingRequests(req, res) {
-    const { userId } = req.user;
 
-    const requests = await Follow.find({ followeeId: userId, status: "pending" })
+
+    const requests = await Follow.find({ followeeId: req.user._id, status: "pending" })
         .populate("followerId", "fullName profilePicture");
 
     if (!requests) {
@@ -119,7 +119,7 @@ async function getPendingRequests(req, res) {
 
 async function acceptFollowRequest(req, res) {
 
-    const { userId } = req.user;
+
     const { followerId } = req.params;
 
     const follower = await User.findById(followerId);
@@ -130,7 +130,7 @@ async function acceptFollowRequest(req, res) {
         });
     };
 
-    const request = await Follow.findOne({ followeeId: userId, followerId, status: "pending" });
+    const request = await Follow.findOne({ followeeId: req.user._id, followerId, status: "pending" });
 
     if (!request) {
         return res.status(400).json({
@@ -149,7 +149,7 @@ async function acceptFollowRequest(req, res) {
 
 async function rejectFollowRequest(req, res) {
 
-    const { userId } = req.user;
+
     const { followerId } = req.params;
 
     const follower = await User.findById(followerId);
@@ -160,7 +160,7 @@ async function rejectFollowRequest(req, res) {
         });
     };
 
-    const request = await Follow.findOne({ followeeId: userId, followerId, status: "pending" });
+    const request = await Follow.findOne({ followeeId: req.user._id, followerId, status: "pending" });
 
     if (!request) {
         return res.status(400).json({
@@ -178,7 +178,7 @@ async function rejectFollowRequest(req, res) {
 async function unFollowUser(req, res) {
 
     const { followeeId } = req.params;
-    const followerId = req.user.userId;
+    const followerId = req.user._id;
 
     const isFolloweeExist = await User.findById(followeeId);
 
@@ -241,7 +241,7 @@ async function getFollowers(req, res) {
 };
 
 async function checkFollowStatus(req, res) {
-    const followerId = req.user.userId;
+    const followerId = req.user._id;
     const { followeeId } = req.params;
 
     const isFollowing = await Follow.findOne({
@@ -309,11 +309,11 @@ async function getUserById(req, res) {
 
 async function updateUserProfile(req, res) {
     try {
-        const { userId } = req.user;
+
         const { fullName, bio, profilePicture } = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(
-            userId,
+            req.user._id,
             {
                 fullName: fullName || undefined,
                 bio: bio || undefined,

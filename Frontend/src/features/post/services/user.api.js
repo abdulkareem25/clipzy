@@ -1,21 +1,16 @@
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: "http://localhost:3000/api/users",
-  withCredentials: true
-});
+import api from "../../shared/services/api";
 
 export const followUser = async (followeeId) => {
-  const response = await api.post(`/follow/${followeeId}`);
+  const response = await api.post(`/users/follow/${followeeId}`);
   return response.data;
 };
 
 export const unfollowUser = async (followeeId) => {
-  const response = await api.post(`/unfollow/${followeeId}`);
+  const response = await api.post(`/users/unfollow/${followeeId}`);
   return response.data;
 };
 
 export const checkFollowStatus = async (followeeId) => {
-  const response = await api.get(`/follow/check/${followeeId}`);
+  const response = await api.get(`/users/follow/check/${followeeId}`);
   return response.data;
 };

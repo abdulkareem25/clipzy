@@ -1,19 +1,9 @@
-import axios from 'axios';
-
-const userApi = axios.create({
-  baseURL: 'http://localhost:3000/api/users',
-  withCredentials: true,
-});
-
-const postApi = axios.create({
-  baseURL: 'http://localhost:3000/api/posts',
-  withCredentials: true,
-});
+import api from "../../shared/services/api";
 
 // Fetch user profile by ID
 export const fetchUserProfile = async (userId) => {
   try {
-    const response = await userApi.get(`/${userId}`);
+    const response = await api.get(`/users/${userId}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: 'Failed to fetch user profile' };
@@ -23,7 +13,7 @@ export const fetchUserProfile = async (userId) => {
 // Fetch user's posts
 export const fetchUserPosts = async (userId) => {
   try {
-    const response = await postApi.get(`/get-posts/user/${userId}`);
+    const response = await api.get(`/posts/get-posts/user/${userId}`);
     return response.data.posts || [];
   } catch (error) {
     throw error.response?.data || { message: 'Failed to fetch user posts' };
@@ -33,7 +23,7 @@ export const fetchUserPosts = async (userId) => {
 // Fetch followers list
 export const fetchFollowers = async (userId) => {
   try {
-    const response = await userApi.get(`/followers/${userId}`);
+    const response = await api.get(`/users/followers/${userId}`);
     return response.data.followers || [];
   } catch (error) {
     throw error.response?.data || { message: 'Failed to fetch followers' };
@@ -43,7 +33,7 @@ export const fetchFollowers = async (userId) => {
 // Fetch following list
 export const fetchFollowing = async (userId) => {
   try {
-    const response = await userApi.get(`/following/${userId}`);
+    const response = await api.get(`/users/following/${userId}`);
     return response.data.following || [];
   } catch (error) {
     throw error.response?.data || { message: 'Failed to fetch following' };
@@ -53,7 +43,7 @@ export const fetchFollowing = async (userId) => {
 // Check follow status
 export const checkFollowStatus = async (userId) => {
   try {
-    const response = await userApi.get(`/follow/check/${userId}`);
+    const response = await api.get(`/users/follow/check/${userId}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: 'Failed to check follow status' };
@@ -63,7 +53,7 @@ export const checkFollowStatus = async (userId) => {
 // Follow a user
 export const followUser = async (userId) => {
   try {
-    const response = await userApi.post(`/follow/${userId}`);
+    const response = await api.post(`/users/follow/${userId}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: 'Failed to follow user' };
@@ -73,7 +63,7 @@ export const followUser = async (userId) => {
 // Unfollow a user
 export const unfollowUser = async (userId) => {
   try {
-    const response = await userApi.post(`/unfollow/${userId}`);
+    const response = await api.post(`/users/unfollow/${userId}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: 'Failed to unfollow user' };
@@ -83,7 +73,7 @@ export const unfollowUser = async (userId) => {
 // Update user profile
 export const updateUserProfile = async (userData) => {
   try {
-    const response = await userApi.put('/profile', userData);
+    const response = await api.put('/users/profile', userData);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: 'Failed to update profile' };

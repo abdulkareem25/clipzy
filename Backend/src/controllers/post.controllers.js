@@ -6,14 +6,14 @@ const Follow = require("../models/follow.model");
 const createPost = async (req, res) => {
     const { buffer } = req.file;
     const { caption, projectId } = req.body;
-    const { userId } = req.user;
 
-    const result = await uploadImage(buffer, userId);
+
+    const result = await uploadImage(buffer, req.user._id);
 
     const post = await Post.create({
         imageUrl: result.url,
         caption,
-        userId,
+        userId: req.user._id,
         projectId
     });
 
@@ -41,11 +41,17 @@ const getPosts = async (req, res) => {
 
 const getPostsByFollowing = async (req, res) => {
 
-    const { userId } = req.user;
 
-    const posts = await Post.find({ userId: { $in: await Follow.find({ followerId: userId, status: "accepted" }).distinct("followeeId") } })
+
+    const followeeIds = await Follow.find({
+        followerId: req.user._id,
+        status: "accepted"
+    }).distinct("followeeId");
+
+    const posts = await Post.find({ userId: { $in: followeeIds } })
         .populate('userId', ['username', 'profilePicture'])
         .populate('projectId', ['title']);
+
     res.status(200).json({
         message: "Posts retrieved successfully.",
         posts
@@ -82,7 +88,6 @@ const getPostsByProjectId = async (req, res) => {
 const getPost = async (req, res) => {
 
     const { postId } = req.params;
-    const { userId } = req.user;
 
     const post = await Post.findById(postId)
         .populate('userId', ['username', 'profilePicture'])
@@ -94,7 +99,7 @@ const getPost = async (req, res) => {
         });
     };
 
-    const isValid = post.userId.toString() === userId;
+    const isValid = post.userId._id.toString() === req.user._id;
 
     if (!isValid) {
         return res.status(403).json({
@@ -111,7 +116,7 @@ const getPost = async (req, res) => {
 const likePost = async (req, res) => {
 
     const { postId } = req.params;
-    const { userId } = req.user;
+
 
     const post = await Post.findById(postId);
 
@@ -121,10 +126,7 @@ const likePost = async (req, res) => {
         });
     };
 
-    const isLiked = await Like.findOne({
-        postId,
-        userId
-    });
+    const isLiked = await Like.findOne({ postId, userId: req.user._id });
 
     if (isLiked) {
         return res.status(400).json({
@@ -132,10 +134,7 @@ const likePost = async (req, res) => {
         });
     };
 
-    await Like.create({
-        postId,
-        userId
-    });
+    await Like.create({ postId, userId: req.user._id });
 
     return res.status(201).json({
         message: "Post liked successfully."
@@ -145,7 +144,7 @@ const likePost = async (req, res) => {
 const disLikePost = async (req, res) => {
 
     const { postId } = req.params;
-    const { userId } = req.user;
+
 
     const post = await Post.findById(postId);
 
@@ -155,10 +154,7 @@ const disLikePost = async (req, res) => {
         });
     };
 
-    const isLiked = await Like.findOne({
-        postId,
-        userId
-    });
+    const isLiked = await Like.findOne({ postId, userId: req.user._id });
 
     if (!isLiked) {
         return res.status(400).json({
@@ -166,10 +162,7 @@ const disLikePost = async (req, res) => {
         });
     };
 
-    await Like.findOneAndDelete({
-        postId,
-        userId
-    });
+    await Like.findOneAndDelete({ postId, userId: req.user._id });
 
     return res.status(200).json({
         message: "Post disliked successfully."

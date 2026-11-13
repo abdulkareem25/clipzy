@@ -2,14 +2,14 @@ const multer = require('multer');
 const { Router } = require('express');
 const identifyUser = require('../middlewares/auth.middleware');
 const validateObjectId = require('../middlewares/validateObjectId.middleware');
-const { 
-  createPost, 
+const {
+  createPost,
   getPosts,
-  getPostsByUserId, 
+  getPostsByUserId,
   getPostsByProjectId,
-  getPost, 
-  likePost, 
-  disLikePost, 
+  getPost,
+  likePost,
+  disLikePost,
   getPostsByFollowing
 } = require('../controllers/post.controllers');
 

@@ -3,6 +3,24 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const uploadImage = require('../services/storage.service');
 
+const cookieOptions = {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/'
+};
+
+const setAuthCookies = (res, refreshToken, accessToken) => {
+    res.cookie('refreshToken', refreshToken, {
+        ...cookieOptions,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+    res.cookie('accessToken', accessToken, {
+        ...cookieOptions,
+        maxAge: 15 * 60 * 1000
+    });
+};
+
 const signUp = async (req, res) => {
 
     const { fullName, email, password, username, bio } = req.body;
@@ -40,13 +58,23 @@ const signUp = async (req, res) => {
         profilePicture: profilePictureUrl
     });
 
-    const token = jwt.sign(
-        { userId: user._id },
+    const refreshToken = jwt.sign(
+        { _id: user._id },
         process.env.JWT_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '7d' }
     );
 
-    res.cookie('token', token);
+    const accessToken = jwt.sign(
+        { _id: user._id },
+        process.env.ACCESS_SECRET,
+        { expiresIn: '15m' }
+    );
+
+    await User.updateOne(
+        { _id: user._id },
+        { $set: { refresh_token: refreshToken } }
+    );
+    setAuthCookies(res, refreshToken, accessToken);
 
     res.status(201).json({
         message: "User registered successfully.",
@@ -87,7 +115,7 @@ const signIn = async (req, res, next) => {
         });
     };
 
-    const token = jwt.sign(
+    const refreshToken = jwt.sign(
         { _id: user._id },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
@@ -99,19 +127,11 @@ const signIn = async (req, res, next) => {
         { expiresIn: '15m' }
     )
 
-    res.cookie('token', token, {
-        maxAge: 7 * 24 * 60 * 60
-    });
-    res.cookie('access_token', accessToken, {
-        maxAge: 15 * 60 * 60
-    });
-
-    //update user refresh token in database
-
-    const updatedUser = await User.updateOne(
+    await User.updateOne(
         { _id: user._id },
-        { $set: { refresh_token: token } },
-        { new: true });
+        { $set: { refresh_token: refreshToken } }
+    );
+    setAuthCookies(res, refreshToken, accessToken);
 
     res.status(200).json({
         message: "User logged in successfully.",
@@ -120,14 +140,18 @@ const signIn = async (req, res, next) => {
             fullName: user.fullName,
             email: user.email,
             username: user.username,
-            bio: user.bio,
-            profilePicture: user.profilePicture
+            bio: user.bio
         }
     });
 };
 
 const signOut = async (req, res) => {
-    res.clearCookie('token');
+    await User.updateOne(
+        { _id: req.user._id },
+        { $unset: { refresh_token: 1 } }
+    );
+    res.clearCookie('refreshToken', cookieOptions);
+    res.clearCookie('accessToken', cookieOptions);
     res.status(200).json({
         message: "User logged out successfully."
     });
@@ -135,9 +159,7 @@ const signOut = async (req, res) => {
 
 const getUser = async (req, res) => {
 
-    const { userId } = req.user;
-
-    const user = await User.findById(userId);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
         return res.status(404).json({
@@ -151,26 +173,40 @@ const getUser = async (req, res) => {
             fullName: user.fullName,
             email: user.email,
             username: user.username,
-            bio: user.bio,
-            profilePicture: user.profilePicture
+            bio: user.bio
         }
     });
 };
 
 const refreshToken = async (req, res) => {
-    const user = await User.findById(req.user._id);
+    const presentedRefreshToken = req.cookies.refreshToken;
 
-    if (!user) return res.status(401).json({
-        message: "Unathorized"
+    if (!presentedRefreshToken) return res.status(401).json({
+        message: "Refresh token is missing."
     });
 
-    const isValid = await jwt.verify(user.refresh_token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+        decoded = jwt.verify(presentedRefreshToken, process.env.JWT_SECRET);
+    } catch {
+        return res.status(401).json({
+            message: "Invalid or expired refresh token."
+        });
+    }
 
-    if (!isValid) return res.status(401).json({
+    const userId = decoded._id || decoded.userId;
+    if (!userId) return res.status(401).json({
         message: "Invalid Token."
     });
 
-    const token = await jwt.sign(
+    const user = await User.findById(userId);
+    if (!user || user.refresh_token !== presentedRefreshToken) {
+        return res.status(401).json({
+            message: "Invalid refresh token."
+        });
+    }
+
+    const refreshToken = await jwt.sign(
         { _id: user._id },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
@@ -184,11 +220,10 @@ const refreshToken = async (req, res) => {
 
     await User.updateOne(
         { _id: user._id },
-        { $set: { refresh_token: token } }
+        { $set: { refresh_token: refreshToken } }
     );
 
-    res.cookie('token', token, { maxAge: 7 * 24 * 60 * 60 });
-    res.cookie('access_token', accessToken, { maxAge: 15 * 60 * 60 });
+    setAuthCookies(res, refreshToken, accessToken);
 
     return res.status(200).json({
         message: "Token Refreshed Successfully."

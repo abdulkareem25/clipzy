@@ -1,17 +1,12 @@
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: "http://localhost:3000/api/auth",
-  withCredentials: true
-})
+import api from "../../shared/services/api";
 
 export const signUp = async (userData) => {
-  const response = await api.post('/sign-up', userData);
+  const response = await api.post('/auth/sign-up', userData);
   return response.data;
 };
 
 export const signIn = async (credential, password) => {
-  const response = await api.post('/sign-in', {
+  const response = await api.post('/auth/sign-in', {
     email: credential,
     username: credential,
     password
@@ -20,11 +15,11 @@ export const signIn = async (credential, password) => {
 };
 
 export const signOut = async () => {
-  const response = await api.post('/sign-out');
+  const response = await api.post('/auth/sign-out');
   return response.data;
 };
 
 export const getUser = async () => {
-  const response = await api.get('/get-user');
+  const response = await api.get('/auth/get-user');
   return response.data;
 };

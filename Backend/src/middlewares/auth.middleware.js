@@ -2,17 +2,25 @@ const jwt = require("jsonwebtoken");
 
 const identifyUser = (req, res, next) => {
 
-    const { token } = req.cookies;
+    const { accessToken } = req.cookies;
 
-    if (!token) {
+    if (!accessToken) {
         return res.status(401).json({
             message: "Authentication token is missing."
         });
     };
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET);
+        const userId = decoded._id || decoded.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                message: "Invalid Token."
+            });
+        }
+
+        req.user = { ...decoded, _id: userId };
     } catch (err) {
         return res.status(401).json({
             message: "Invalid Token.",

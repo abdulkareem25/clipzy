@@ -165,7 +165,7 @@ const Profile = () => {
         {/* Hero Section with Profile Picture and Bio */}
         <div className="profile-hero">
           <div className="profile-picture-wrapper">
-            <img
+            {/* <img
               src={profileUser.profilePicture}
               alt={profileUser.fullName}
               className="profile-picture"
@@ -173,7 +173,7 @@ const Profile = () => {
                 e.target.src =
                   'https://ik.imagekit.io/abdulkareem25/default_pfp.jpg';
               }}
-            />
+            /> */}
           </div>
 
           <div className="profile-info">

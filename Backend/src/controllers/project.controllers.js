@@ -3,7 +3,7 @@ const User = require("../models/user.model");
 
 async function createProject(req, res) {
   const { title, description } = req.body;
-  const { userId } = req.user;
+  const userId = req.user._id;
 
   const isExists = await Project.findOne({ title, userId });
 
@@ -26,7 +26,7 @@ async function createProject(req, res) {
 };
 
 async function getProjects(req, res) {
-  const { userId } = req.user;
+  const userId = req.user._id;
 
   const projects = await Project.find({ userId })
     .populate('userId', 'fullName email');

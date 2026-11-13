@@ -15,6 +15,6 @@ router.post('/sign-out', identifyUser, signOut);
 
 router.get('/get-user', identifyUser, getUser);
 
-router.post('/refresh', identifyUser, refreshToken)
+router.post('/refresh', refreshToken)
 
 module.exports = router;
